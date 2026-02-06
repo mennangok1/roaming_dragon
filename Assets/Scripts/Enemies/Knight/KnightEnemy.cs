@@ -2,6 +2,7 @@ using UnityEngine;
 using System.Collections;
 
 public class KnightEnemy : MonoBehaviour {
+    [SerializeField] private float damage;
     private Vector3 destination;
     [SerializeField] private float speed;
     [SerializeField] private float patrolDistance;
@@ -26,6 +27,10 @@ public class KnightEnemy : MonoBehaviour {
     private Transform environmentCollision;
     private GameObject environmentCollisionObject;
 
+    private Transform knightAttack;
+    private GameObject knightAttackObject;
+    private KnightAttack attackScript;
+
 
     protected void Awake() {
         patrolCenterXPosition = transform.position.x;
@@ -35,16 +40,24 @@ public class KnightEnemy : MonoBehaviour {
 
         environmentCollision = transform.Find("KnightEnvironmentCollision");
         environmentCollisionObject = environmentCollision.gameObject;
+        
+        knightAttack = transform.Find("KnightAttack");
+        knightAttackObject = knightAttack.gameObject;
+        attackScript = knightAttackObject.GetComponent<KnightAttack>();
         patrolRoutine = StartCoroutine(Patrol());
+
+
     }
     private void Update()
     {
-
         if (currentState == EnemyState.patrolling)
         {
             Walk();
         }
-
+        if (!attackScript.getIsWalking())
+        {
+            body.linearVelocity = Vector2.zero;
+        }
         if(IsCollidingWithEnvironment())
         {
             Flip();
@@ -109,4 +122,27 @@ public class KnightEnemy : MonoBehaviour {
         environmentCollisionObject.GetComponent<KnightEnvironmentCollision>().ResetAfterFlip();
     }
     
+    private void GiveDamage()
+    {
+    if (attackScript != null && attackScript.player != null)
+        {
+            Health playerHealth = attackScript.player.GetComponent<Health>();
+            if (playerHealth != null)
+            {
+                playerHealth.TakeDamage(damage);
+            }
+        }
+    }
+
+    private void EndAttack()
+    {
+        isAttacking = false;
+        animator.SetBool("isAttacking", isAttacking);
+        animator.SetBool("isWalking", true);
+        body.linearVelocity = new Vector2(speed, body.linearVelocity.y);
+        attackScript.ResetAttackCooldown();
+        attackScript.setIsWalking(true);
+        //Flip();
+    }
+
 }
