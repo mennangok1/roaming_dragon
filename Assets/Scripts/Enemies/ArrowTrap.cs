@@ -5,7 +5,7 @@ public class ArrowTrap : MonoBehaviour
     [SerializeField] private float attackCooldown;
     [SerializeField] private Transform firePoint;
     [SerializeField] private GameObject[] arrows;
-
+    
     private float cooldownTimer;
 
     private void Attack()
