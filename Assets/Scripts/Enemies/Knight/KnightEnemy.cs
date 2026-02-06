@@ -23,14 +23,18 @@ public class KnightEnemy : MonoBehaviour {
     private EnemyState currentState = EnemyState.patrolling;
     private bool isAttacking;
     
+    private Transform environmentCollision;
+    private GameObject environmentCollisionObject;
 
 
-    private void Awake() {
+    protected void Awake() {
         patrolCenterXPosition = transform.position.x;
         body = GetComponent<Rigidbody2D>();
         animator = GetComponent<Animator>();
         collider = GetComponent<BoxCollider2D>();
 
+        environmentCollision = transform.Find("KnightEnvironmentCollision");
+        environmentCollisionObject = environmentCollision.gameObject;
         patrolRoutine = StartCoroutine(Patrol());
     }
     private void Update()
@@ -39,6 +43,12 @@ public class KnightEnemy : MonoBehaviour {
         if (currentState == EnemyState.patrolling)
         {
             Walk();
+        }
+
+        if(IsCollidingWithEnvironment())
+        {
+            Flip();
+            ResetAfterCollisionWithEnvironmentFlip();
         }
     }
     private void OnCollisionEnter2D(Collision2D collision)
@@ -84,10 +94,19 @@ public class KnightEnemy : MonoBehaviour {
         return transform.localScale.x > 0;
     }
 
-    private void Flip()
+    protected void Flip()
     {
         transform.localScale = new Vector3 (-transform.localScale.x, transform.localScale.y, transform.localScale.z);
     }
 
+    private bool IsCollidingWithEnvironment()
+    {
+        return environmentCollisionObject.GetComponent<KnightEnvironmentCollision>().isColliding;
+    }
+
+    private void ResetAfterCollisionWithEnvironmentFlip()
+    {
+        environmentCollisionObject.GetComponent<KnightEnvironmentCollision>().ResetAfterFlip();
+    }
     
 }
