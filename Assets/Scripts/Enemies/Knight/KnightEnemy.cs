@@ -20,41 +20,43 @@ public class KnightEnemy : MonoBehaviour {
     [SerializeField] private LayerMask playerLayer;
     [SerializeField] private LayerMask groundLayer;
 
-    private enum EnemyState {patrolling, waiting, chasing, attacking}
-    private EnemyState currentState = EnemyState.patrolling;
-    private bool isAttacking;
+    public enum EnemyState {patrolling, waiting, chasing, attacking, dizzy}
+    private EnemyState currentState;
     
-    private Transform environmentCollision;
-    private GameObject environmentCollisionObject;
-
-    private Transform knightAttack;
-    private GameObject knightAttackObject;
+    private KnightEnvironmentCollision environmentCollisionScript;
     private KnightAttack attackScript;
 
 
+
+    [SerializeField] private float dizzyDuration;
+
     protected void Awake() {
+        // set patrol center, get rigidbody, animator, and collider components
         patrolCenterXPosition = transform.position.x;
         body = GetComponent<Rigidbody2D>();
         animator = GetComponent<Animator>();
         collider = GetComponent<BoxCollider2D>();
 
-        environmentCollision = transform.Find("KnightEnvironmentCollision");
-        environmentCollisionObject = environmentCollision.gameObject;
-        
-        knightAttack = transform.Find("KnightAttack");
-        knightAttackObject = knightAttack.gameObject;
-        attackScript = knightAttackObject.GetComponent<KnightAttack>();
+        // get the environment collision and attack scripts in the child objects
+        environmentCollisionScript = transform.Find("KnightEnvironmentCollision")
+                                                .gameObject
+                                                .GetComponent<KnightEnvironmentCollision>();
+        attackScript = transform.Find("KnightAttack")
+                                .gameObject
+                                .GetComponent<KnightAttack>();
+
         patrolRoutine = StartCoroutine(Patrol());
 
 
     }
     private void Update()
     {
+        Debug.Log(currentState);
         if (currentState == EnemyState.patrolling)
         {
             Walk();
         }
-        if (!attackScript.getIsWalking())
+        else if (currentState == EnemyState.attacking || currentState == EnemyState.dizzy)
         {
             body.linearVelocity = Vector2.zero;
         }
@@ -70,7 +72,6 @@ public class KnightEnemy : MonoBehaviour {
 
     IEnumerator Patrol()
     {
-
         while (true)
         {
             // walking state
@@ -85,8 +86,25 @@ public class KnightEnemy : MonoBehaviour {
             animator.SetBool("isWalking", false);
             yield return new WaitForSeconds(patrolBreakDuration);
         }
-        
     }
+
+    public IEnumerator FeelDizzy()
+    {
+        currentState = EnemyState.dizzy;
+        Debug.Log("inside FeelDizzy()");
+        body.linearVelocity = Vector2.zero;
+        animator.SetBool("isFeelingDizzy", true);
+        animator.SetBool("isWalking", false);
+
+        yield return new WaitForSeconds(dizzyDuration);
+
+        animator.SetBool("isFeelingDizzy", false);
+        animator.SetBool("isWalking", true);
+        body.linearVelocity = new Vector2(speed, 0);
+        currentState = EnemyState.patrolling;
+
+    }
+
     private void Walk()
     {
         if (IsFacingRight() && transform.position.x < patrolCenterXPosition + patrolDistance)
@@ -114,35 +132,81 @@ public class KnightEnemy : MonoBehaviour {
 
     private bool IsCollidingWithEnvironment()
     {
-        return environmentCollisionObject.GetComponent<KnightEnvironmentCollision>().isColliding;
+        return environmentCollisionScript.isColliding;
     }
 
     private void ResetAfterCollisionWithEnvironmentFlip()
     {
-        environmentCollisionObject.GetComponent<KnightEnvironmentCollision>().ResetAfterFlip();
+        environmentCollisionScript.ResetAfterFlip();
     }
     
-    private void GiveDamage()
+    public void StartAttack()
     {
-    if (attackScript != null && attackScript.player != null)
+        Debug.Log("Inside StartAttack()");
+        if (patrolRoutine != null )
         {
+            StopCoroutine(patrolRoutine);
+            patrolRoutine = null;
+        }
+        currentState = EnemyState.attacking;
+        animator.SetBool("isAttacking", true);
+        animator.SetBool("isWalking", false);
+        body.linearVelocity = Vector2.zero;
+        Debug.Log("End of StartAttack()");
+}
+
+
+    public void GiveDamage()
+    {
+        Debug.Log("Inside GiveDamage()");
+        if (attackScript != null && attackScript.player != null)
+        {
+            Debug.Log("Inside If, before playerHealth init");
             Health playerHealth = attackScript.player.GetComponent<Health>();
-            if (playerHealth != null)
+            Debug.Log("After playerHealth init");
+            if (playerHealth != null && attackScript.isPlayerInRange)
             {
+                Debug.Log("Before playerHealth Take damage");
                 playerHealth.TakeDamage(damage);
             }
         }
+        else
+        {
+            if (attackScript == null)
+            {
+                Debug.Log("attack script is null");
+            }
+            else
+            {
+                Debug.Log("player is null");
+            }
+        }
+        Debug.Log("End of GiveDamage");
     }
 
-    private void EndAttack()
+    public void EndAttack()
     {
-        isAttacking = false;
-        animator.SetBool("isAttacking", isAttacking);
+        Debug.Log("Inside EndAttack()");
+        currentState = EnemyState.patrolling;
+        animator.SetBool("isAttacking", false);
         animator.SetBool("isWalking", true);
         body.linearVelocity = new Vector2(speed, body.linearVelocity.y);
         attackScript.ResetAttackCooldown();
-        attackScript.setIsWalking(true);
-        //Flip();
+        patrolRoutine = StartCoroutine(Patrol());
+        Flip();
+        Debug.Log("End of EndAttack()");
     }
+
+    public void SetCurrentState(EnemyState state)
+    {
+        currentState = state;
+    }
+
+    public EnemyState GetCurrentState()
+    {
+        return currentState;
+    }
+
+
 
 }

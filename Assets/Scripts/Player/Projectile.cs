@@ -4,6 +4,7 @@ public class Projectile : MonoBehaviour
 {
     [SerializeField] private float speed;
     [SerializeField] private float lifetime;
+    [SerializeField] private float damage;
     private float lifetimeCounter;
 
     private bool hit;
@@ -38,9 +39,14 @@ public class Projectile : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D collision) 
     {
-        hit = true;
-        boxCollider.enabled = false;
-        animator.SetTrigger("explode");    
+        if (collision.gameObject.layer == LayerMask.NameToLayer("EnemyHitbox"))
+        {
+            Debug.Log("Hit Enemy");
+            hit = true;
+            boxCollider.enabled = false;
+            animator.SetTrigger("explode");
+            collision.GetComponentInParent<EnemyHealth>().TakeDamage(damage);
+        }
     }
 
     public void SetDirection(float _direction)

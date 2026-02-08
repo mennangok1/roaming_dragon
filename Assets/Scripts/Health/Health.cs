@@ -5,13 +5,13 @@ public class Health : MonoBehaviour
 {
 
     [Header ("Health Parameters")]
-    [SerializeField] private float initialHealth;
-    [SerializeField] public float currentHealth {get; private set;}
+    [SerializeField] protected float initialHealth;
+    [SerializeField] public float currentHealth {get; protected set;}
 
 
-    private bool isDead;
+    protected bool isDead;
 
-    private Animator animator;
+    protected Animator animator;
 
     [Header("iFrames")]
     [SerializeField] private float invincibleDuration;
@@ -22,7 +22,7 @@ public class Health : MonoBehaviour
     private SpriteRenderer spriteRenderer;
 
 
-    private void Awake() {
+    protected void Awake() {
         currentHealth = initialHealth;
 
         animator = GetComponent<Animator>();
@@ -70,7 +70,7 @@ public class Health : MonoBehaviour
     }
 
 
-    private IEnumerator Invincibility()
+    protected IEnumerator Invincibility()
 
     {
         Physics2D.IgnoreLayerCollision(9, 10, true);

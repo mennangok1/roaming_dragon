@@ -341,9 +341,9 @@ GameObject:
   - component: {fileID: 191227732}
   - component: {fileID: 191227731}
   - component: {fileID: 191227730}
-  m_Layer: 0
+  m_Layer: 11
   m_Name: Fireball (8)
-  m_TagString: Untagged
+  m_TagString: Projectile
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -472,6 +472,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::Projectile
   speed: 5
   lifetime: 2
+  damage: 1
 --- !u!212 &191227734
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -544,9 +545,9 @@ GameObject:
   - component: {fileID: 288229840}
   - component: {fileID: 288229839}
   - component: {fileID: 288229838}
-  m_Layer: 0
+  m_Layer: 11
   m_Name: Fireball (7)
-  m_TagString: Untagged
+  m_TagString: Projectile
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -675,6 +676,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::Projectile
   speed: 5
   lifetime: 2
+  damage: 1
 --- !u!212 &288229842
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -914,6 +916,7 @@ GameObject:
   - component: {fileID: 427318732}
   - component: {fileID: 427318731}
   - component: {fileID: 427318735}
+  - component: {fileID: 427318736}
   m_Layer: 10
   m_Name: KnightEnemy
   m_TagString: Enemy
@@ -930,13 +933,14 @@ Transform:
   m_GameObject: {fileID: 427318728}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0.64, y: -1.277, z: 0}
+  m_LocalPosition: {x: -0.92, y: -1.277, z: 0}
   m_LocalScale: {x: 1.25, y: 1.25, z: 1.25}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 1529262284}
   - {fileID: 293167139}
   - {fileID: 1053426429}
+  - {fileID: 1739004358}
   m_Father: {fileID: 54611659}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &427318731
@@ -951,7 +955,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7d5646ba8c96c4d709ed221a5c7b4957, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::KnightEnemy
-  damage: 0
+  damage: 1
   speed: 3
   patrolDistance: 5
   patrolWalkDuration: 3
@@ -962,6 +966,7 @@ MonoBehaviour:
   groundLayer:
     serializedVersion: 2
     m_Bits: 256
+  dizzyDuration: 0
 --- !u!95 &427318732
 Animator:
   serializedVersion: 7
@@ -1115,6 +1120,22 @@ BoxCollider2D:
   m_AutoTiling: 0
   m_Size: {x: 0.8220962, y: 1.390048}
   m_EdgeRadius: 0
+--- !u!114 &427318736
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 427318728}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6dec004df370c42edbcc0c23a38d8b18, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::EnemyHealth
+  initialHealth: 2
+  invincibleDuration: 1
+  numOfFlashes: 4
+  feelDizzyIfHealthIsBelow: 1
 --- !u!1 &453253028
 GameObject:
   m_ObjectHideFlags: 0
@@ -1857,7 +1878,7 @@ Transform:
   m_GameObject: {fileID: 744863193}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -5.55, y: -1.034, z: 0}
+  m_LocalPosition: {x: -4.39, y: -1.034, z: 0}
   m_LocalScale: {x: 1.5, y: 1.5, z: 1.5}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -2041,9 +2062,9 @@ GameObject:
   - component: {fileID: 845614300}
   - component: {fileID: 845614299}
   - component: {fileID: 845614298}
-  m_Layer: 0
+  m_Layer: 11
   m_Name: Fireball (2)
-  m_TagString: Untagged
+  m_TagString: Projectile
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -2172,6 +2193,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::Projectile
   speed: 5
   lifetime: 2
+  damage: 1
 --- !u!212 &845614302
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -2328,9 +2350,9 @@ GameObject:
   - component: {fileID: 1000621439}
   - component: {fileID: 1000621438}
   - component: {fileID: 1000621437}
-  m_Layer: 0
+  m_Layer: 11
   m_Name: Fireball (3)
-  m_TagString: Untagged
+  m_TagString: Projectile
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -2459,6 +2481,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::Projectile
   speed: 5
   lifetime: 2
+  damage: 1
 --- !u!212 &1000621441
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -2616,9 +2639,9 @@ GameObject:
   - component: {fileID: 1060607926}
   - component: {fileID: 1060607925}
   - component: {fileID: 1060607924}
-  m_Layer: 0
+  m_Layer: 11
   m_Name: Fireball (1)
-  m_TagString: Untagged
+  m_TagString: Projectile
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -2747,6 +2770,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::Projectile
   speed: 5
   lifetime: 2
+  damage: 1
 --- !u!212 &1060607928
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -2975,9 +2999,9 @@ GameObject:
   - component: {fileID: 1405508840}
   - component: {fileID: 1405508839}
   - component: {fileID: 1405508838}
-  m_Layer: 0
+  m_Layer: 11
   m_Name: Fireball
-  m_TagString: Untagged
+  m_TagString: Projectile
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -3106,6 +3130,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::Projectile
   speed: 5
   lifetime: 2
+  damage: 1
 --- !u!212 &1405508842
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -3178,9 +3203,9 @@ GameObject:
   - component: {fileID: 1512392606}
   - component: {fileID: 1512392605}
   - component: {fileID: 1512392604}
-  m_Layer: 0
+  m_Layer: 11
   m_Name: Fireball (4)
-  m_TagString: Untagged
+  m_TagString: Projectile
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -3309,6 +3334,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::Projectile
   speed: 5
   lifetime: 2
+  damage: 1
 --- !u!212 &1512392608
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -3655,6 +3681,84 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 1023a3ee2f096415b9f0f5d996f3f640, type: 3}
+--- !u!1 &1739004357
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1739004358}
+  - component: {fileID: 1739004359}
+  m_Layer: 12
+  m_Name: AttackHitBox
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1739004358
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1739004357}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 427318729}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!61 &1739004359
+BoxCollider2D:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1739004357}
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Density: 1
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_ForceSendLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_ForceReceiveLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_ContactCaptureLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_CallbackLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_IsTrigger: 1
+  m_UsedByEffector: 0
+  m_CompositeOperation: 0
+  m_CompositeOrder: 0
+  m_Offset: {x: -0.009824052, y: -0.466641}
+  m_SpriteTilingProperty:
+    border: {x: 0, y: 0, z: 0, w: 0}
+    pivot: {x: 0, y: 0}
+    oldSize: {x: 0, y: 0}
+    newSize: {x: 0, y: 0}
+    adaptiveTilingThreshold: 0
+    drawMode: 0
+    adaptiveTiling: 0
+  m_AutoTiling: 0
+  m_Size: {x: 0.9803519, y: 1.5010251}
+  m_EdgeRadius: 0
 --- !u!1 &1748582547
 GameObject:
   m_ObjectHideFlags: 0
@@ -3705,9 +3809,9 @@ GameObject:
   - component: {fileID: 1764494535}
   - component: {fileID: 1764494534}
   - component: {fileID: 1764494533}
-  m_Layer: 0
+  m_Layer: 11
   m_Name: Fireball (6)
-  m_TagString: Untagged
+  m_TagString: Projectile
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -3836,6 +3940,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::Projectile
   speed: 5
   lifetime: 2
+  damage: 1
 --- !u!212 &1764494537
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -4043,9 +4148,9 @@ GameObject:
   - component: {fileID: 2120118378}
   - component: {fileID: 2120118377}
   - component: {fileID: 2120118376}
-  m_Layer: 0
+  m_Layer: 11
   m_Name: Fireball (5)
-  m_TagString: Untagged
+  m_TagString: Projectile
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -4174,6 +4279,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::Projectile
   speed: 5
   lifetime: 2
+  damage: 1
 --- !u!212 &2120118380
 SpriteRenderer:
   m_ObjectHideFlags: 0

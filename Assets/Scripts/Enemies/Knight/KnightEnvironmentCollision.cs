@@ -8,7 +8,7 @@ public class KnightEnvironmentCollision : MonoBehaviour {
         isColliding = false;
     }
     private void OnTriggerEnter2D(Collider2D other) {
-        if (other != null && other.tag != "Player")
+        if (other != null && other.tag != "Player" && other.tag != "Projectile")
         {
             isColliding = true;
         }

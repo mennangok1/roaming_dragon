@@ -6,6 +6,7 @@ TagManager:
   tags:
   - Ground
   - Enemy
+  - Projectile
   layers:
   - Default
   - TransparentFX
@@ -18,8 +19,8 @@ TagManager:
   - Ground
   - Player
   - Enemy
-  - 
-  - 
+  - Projectile
+  - EnemyHitbox
   - 
   - 
   - 
