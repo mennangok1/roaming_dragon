@@ -29,8 +29,10 @@ public class Player : MonoBehaviour
 
     [SerializeField] private float playerScale = 1.5f; 
     [SerializeField] private float jumpForce = 18f;
+    [SerializeField] private float coyoteTime;
+    [SerializeField] private float coyoteCountdown;
+    private bool onWall;
 
-    [SerializeField] private bool onWall;
 
     [Header ("Audio")]
     [SerializeField] private AudioClip jumpSound;
@@ -43,7 +45,7 @@ public class Player : MonoBehaviour
         boxCollider = GetComponent<BoxCollider2D>();
 
     }
-        private void Update()
+    private void Update()
     {
 
         onWall = isOnWall();
@@ -63,14 +65,27 @@ public class Player : MonoBehaviour
             Flip(horizontalInput);
         }
 
+        if (isGrounded())
+        {
+            coyoteCountdown = coyoteTime;
+        }
+        else
+        {
+            coyoteCountdown -= Time.deltaTime;
+        }
         // Ground jump
-        if ( Input.GetKeyDown(KeyCode.Space) && isGrounded())
+        if ( Input.GetKeyDown(KeyCode.Space) && IsCoyote())
         {
             GroundJump();
         }
         else if (Input.GetKeyDown(KeyCode.Space) && isOnWall() && !isGrounded())
         {
             WallJump();
+        }
+
+        if (Input.GetKeyUp(KeyCode.Space) && body.linearVelocity.y > 0)
+        {
+            body.linearVelocity = new Vector2(body.linearVelocity.x, body.linearVelocity.y / 2);
         }
 
         // Wall slide
@@ -92,9 +107,11 @@ public class Player : MonoBehaviour
 
     private void GroundJump()
     {
-        SoundManager.instance.PlaySound(jumpSound);
+
         body.gravityScale = defaultGravity;
         body.linearVelocity = new Vector2(body.linearVelocity.x, jumpForce);
+        SoundManager.instance.PlaySound(jumpSound);
+        coyoteCountdown = 0;
     }
 
     private void WallJump()
@@ -126,7 +143,10 @@ public class Player : MonoBehaviour
 
         return raycastHitGround.collider != null;
     }
-
+    private bool IsCoyote()
+    {
+        return coyoteCountdown > 0;
+    }
     private bool isOnWall()
     {
         RaycastHit2D raycastHitWall = Physics2D.BoxCast(boxCollider.bounds.center, boxCollider.bounds.size, 0, new Vector2(transform.localScale.x, 0), 0.1f, wallLayer);
