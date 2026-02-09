@@ -27,14 +27,24 @@ public class KnightAttack: MonoBehaviour
         }
     }
 
-    private void OnTriggerEnter2D(Collider2D other) {
-        if (other.tag == "Player" && attackCooldown > attackDelay)
+    private void TryAttack(Collider2D other) {
+        if (attackCooldown > attackDelay && !other.GetComponent<Health>().IsDead())
         {
             KnightEnemy enemy = GetComponentInParent<KnightEnemy>();
             player = other.gameObject;
             enemy.StartAttack();
         }
 
+    }
+
+    private void OnTriggerEnter2D(Collider2D other)
+    {
+        if (other.CompareTag("Player")) TryAttack(other);
+    }
+
+    private void OnTriggerStay2D(Collider2D other)
+    {
+        if (other.CompareTag("Player")) TryAttack(other);
     }
 
     public void ResetAttackCooldown()

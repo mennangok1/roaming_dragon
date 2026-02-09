@@ -17,7 +17,13 @@ public class FireTrap : MonoBehaviour
     private bool isActive;
 
     private float blinkWaitSeconds;
+
+
     
+    [Header("Audio")]
+    [SerializeField] private AudioClip fireTrapSound;
+    [SerializeField] private AudioClip blinkSound;
+
     
     private void Awake() {
 
@@ -54,12 +60,14 @@ public class FireTrap : MonoBehaviour
         for (int i = 0; i < numOfFlashes; i++)
         {
             spriteRenderer.color = new Color(1,0,0, 0.5f);
+            SoundManager.instance.PlaySound(blinkSound);
             yield return new WaitForSeconds(blinkWaitSeconds);
             spriteRenderer.color = Color.white;
             yield return new WaitForSeconds(blinkWaitSeconds);
         }
         isActive = true;
         animator.SetBool("isActive", isActive);
+        SoundManager.instance.PlaySound(fireTrapSound);
         yield return new WaitForSeconds(activeTime);
         isActive = false;
         animator.SetBool("isActive", isActive);

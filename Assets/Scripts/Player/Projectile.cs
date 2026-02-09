@@ -14,6 +14,9 @@ public class Projectile : MonoBehaviour
     private BoxCollider2D boxCollider;
     private Animator animator;
 
+    [Header("Audio")]
+    [SerializeField] private AudioClip impactSound;
+
     private void Awake() {
         boxCollider = GetComponent<BoxCollider2D>();
         animator = GetComponent<Animator>();
@@ -41,11 +44,19 @@ public class Projectile : MonoBehaviour
     {
         if (collision.gameObject.layer == LayerMask.NameToLayer("EnemyHitbox"))
         {
-            Debug.Log("Hit Enemy");
             hit = true;
             boxCollider.enabled = false;
             animator.SetTrigger("explode");
             collision.GetComponentInParent<EnemyHealth>().TakeDamage(damage);
+            SoundManager.instance.PlaySound(impactSound);
+        
+        }
+
+        if (collision.gameObject.layer == LayerMask.NameToLayer("Ground") || collision.gameObject.layer == LayerMask.NameToLayer("Wall"))
+        {
+            boxCollider.enabled = false;
+            animator.SetTrigger("explode");
+            SoundManager.instance.PlaySound(impactSound);
         }
     }
 

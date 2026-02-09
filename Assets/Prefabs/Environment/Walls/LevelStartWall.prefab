@@ -10,7 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 3843920978656060511}
   - component: {fileID: 4288940898541519114}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Terrain (16x16)_46 (2)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -100,7 +100,7 @@ GameObject:
   m_Component:
   - component: {fileID: 6936744408922284818}
   - component: {fileID: 3843845212987036731}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Terrain (16x16)_46
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -190,7 +190,7 @@ GameObject:
   m_Component:
   - component: {fileID: 5274354017443830433}
   - component: {fileID: 1237642071073006523}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Terrain (16x16) 1_12
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -280,7 +280,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4655407542777678874}
   - component: {fileID: 2416126534137410587}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Terrain (16x16)_46 (1)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -370,7 +370,7 @@ GameObject:
   m_Component:
   - component: {fileID: 376192850514250065}
   - component: {fileID: 2944720790045808054}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: LevelStartWall
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -453,7 +453,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4735965829692502264}
   - component: {fileID: 4079482768634408123}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Terrain (16x16)_46 (3)
   m_TagString: Untagged
   m_Icon: {fileID: 0}

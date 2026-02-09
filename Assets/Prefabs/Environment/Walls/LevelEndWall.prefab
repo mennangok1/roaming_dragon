@@ -10,7 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 6979333555146722921}
   - component: {fileID: 9008472650324792370}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: LevelEndWall
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -92,7 +92,7 @@ GameObject:
   m_Component:
   - component: {fileID: 7887581897684436906}
   - component: {fileID: 6272521590329803312}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Terrain (16x16)_46 (1)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -182,7 +182,7 @@ GameObject:
   m_Component:
   - component: {fileID: 8648050291926143959}
   - component: {fileID: 5006040938185338480}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Terrain (16x16) 1_12
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -272,7 +272,7 @@ GameObject:
   m_Component:
   - component: {fileID: 3346146376800955871}
   - component: {fileID: 1603264098911789678}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Terrain (16x16)_46 (3)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -362,7 +362,7 @@ GameObject:
   m_Component:
   - component: {fileID: 67362334343221632}
   - component: {fileID: 7985762013518572078}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Terrain (16x16)_46 (2)
   m_TagString: Untagged
   m_Icon: {fileID: 0}

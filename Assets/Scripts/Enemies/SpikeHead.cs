@@ -7,7 +7,6 @@ public class SpikeHead : EnemyDamage
     [SerializeField] private float range;
     [SerializeField] private float checkDelay;
 
-
     [SerializeField] private LayerMask playerLayer;
     private bool isAttacking;
     private float checkTimer;

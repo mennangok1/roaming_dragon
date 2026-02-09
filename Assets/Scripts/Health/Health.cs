@@ -9,9 +9,15 @@ public class Health : MonoBehaviour
     [SerializeField] public float currentHealth {get; protected set;}
 
 
+    [Header("Audio")]
+    [SerializeField] private AudioClip dieSound;
+    [SerializeField] private AudioClip collectHeartSound;
+    [SerializeField] private AudioClip bipSound;
+
     protected bool isDead;
 
     protected Animator animator;
+    private Rigidbody2D body;
 
     [Header("iFrames")]
     [SerializeField] private float invincibleDuration;
@@ -28,6 +34,7 @@ public class Health : MonoBehaviour
         animator = GetComponent<Animator>();
         spriteRenderer = GetComponent<SpriteRenderer>();
         blinkWaitSeconds = invincibleDuration / (2 * numOfFlashes);
+        body = GetComponent<Rigidbody2D>();
         isDead = false;
     }
 
@@ -44,9 +51,9 @@ public class Health : MonoBehaviour
         {
             if (!isDead)
             {
+                SoundManager.instance.PlaySound(dieSound);
                 animator.SetTrigger("die");
                 animator.SetBool("isDead", true);
-                GetComponent<Player>().enabled = false;
                 isDead = true;
             }
         }
@@ -54,6 +61,7 @@ public class Health : MonoBehaviour
 
     public void GainHealth( float gain )
     {
+        SoundManager.instance.PlaySound(collectHeartSound);
         currentHealth = Mathf.Clamp(currentHealth + gain, 0, initialHealth);
     }
 
@@ -69,6 +77,15 @@ public class Health : MonoBehaviour
         return currentHealth == initialHealth;
     }
 
+    public bool IsDead()
+    {
+        return isDead;
+    }
+
+    private void DisableRigidbody()
+    {
+        body.simulated = false;
+    }
 
     protected IEnumerator Invincibility()
 
@@ -78,6 +95,7 @@ public class Health : MonoBehaviour
         for (int i = 0; i < numOfFlashes; i++)
         {
             spriteRenderer.color = new Color(1,0,0, 0.5f);
+            SoundManager.instance.PlaySound(bipSound);
             yield return new WaitForSeconds(blinkWaitSeconds);
             spriteRenderer.color = Color.white;
             yield return new WaitForSeconds(blinkWaitSeconds);

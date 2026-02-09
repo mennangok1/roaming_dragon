@@ -18,7 +18,7 @@ public class EnemyHealth : Health
 
         if (currentHealth > 0)
         {
-            if (currentHealth <= feelDizzyIfHealthIsBelow)
+            if (currentHealth <= feelDizzyIfHealthIsBelow && knightEnemy.GetCurrentState() != KnightEnemy.EnemyState.dizzy)
             {
                 Debug.Log("Feel dizzy set current state");
                 StartCoroutine(knightEnemy.FeelDizzy());
@@ -29,9 +29,11 @@ public class EnemyHealth : Health
         {
             if (!isDead)
             {
-                animator.SetBool("isDead", true);
-                //gameObject.SetActive(false);
+                knightEnemy.Stop();
+                knightEnemy.SetCurrentState(KnightEnemy.EnemyState.dead);
                 isDead = true;
+                animator.SetBool("isDead", true);
+                animator.SetBool("isFeelingDizzy", false);
             }
         }
     }

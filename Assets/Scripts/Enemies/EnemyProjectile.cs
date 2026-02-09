@@ -27,7 +27,5 @@ public class EnemyProjectile : EnemyDamage
 
         base.OnTriggerEnter2D(other);
         gameObject.SetActive(false);
-
-        
     }
 }

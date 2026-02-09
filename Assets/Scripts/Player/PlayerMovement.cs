@@ -32,6 +32,9 @@ public class Player : MonoBehaviour
 
     [SerializeField] private bool onWall;
 
+    [Header ("Audio")]
+    [SerializeField] private AudioClip jumpSound;
+
 
     private void Awake()
     {
@@ -89,12 +92,14 @@ public class Player : MonoBehaviour
 
     private void GroundJump()
     {
+        SoundManager.instance.PlaySound(jumpSound);
         body.gravityScale = defaultGravity;
         body.linearVelocity = new Vector2(body.linearVelocity.x, jumpForce);
     }
 
     private void WallJump()
     {
+        SoundManager.instance.PlaySound(jumpSound);
         int wallDir = WallDirection(); // +1 right wall, -1 left wall
 
         wallJumpLockCounter = wallJumpLockTime;

@@ -2,11 +2,13 @@ using UnityEngine;
 
 public class PlayerAttack : MonoBehaviour
 {
-
     [SerializeField] private float attackCooldown;
 
     [SerializeField] private Transform firePoint;
     [SerializeField] private GameObject[] fireBalls;
+
+    [Header("Audio")]
+    [SerializeField] private AudioClip fireballSound;
 
     private float cooldownTimer = Mathf.Infinity;
     private Animator animator;
@@ -29,6 +31,7 @@ public class PlayerAttack : MonoBehaviour
 
     private void Attack()
     {
+        SoundManager.instance.PlaySound(fireballSound);
         animator.SetTrigger("attack");
         cooldownTimer = 0;   
 

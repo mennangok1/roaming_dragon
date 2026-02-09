@@ -20,11 +20,16 @@ public class KnightEnemy : MonoBehaviour {
     [SerializeField] private LayerMask playerLayer;
     [SerializeField] private LayerMask groundLayer;
 
-    public enum EnemyState {patrolling, waiting, chasing, attacking, dizzy}
+    public enum EnemyState {patrolling, waiting, chasing, attacking, dizzy, dead}
     private EnemyState currentState;
     
     private KnightEnvironmentCollision environmentCollisionScript;
     private KnightAttack attackScript;
+
+    [Header("Audio")]
+    [SerializeField] private AudioClip swordAttackSound;
+    [SerializeField] private AudioClip dizzySound;
+    [SerializeField] private AudioClip impactSound;
 
 
 
@@ -56,9 +61,9 @@ public class KnightEnemy : MonoBehaviour {
         {
             Walk();
         }
-        else if (currentState == EnemyState.attacking || currentState == EnemyState.dizzy)
+        else if (currentState == EnemyState.attacking || currentState == EnemyState.dizzy || currentState == EnemyState.dead)
         {
-            body.linearVelocity = Vector2.zero;
+            Stop();
         }
         if(IsCollidingWithEnvironment())
         {
@@ -78,21 +83,41 @@ public class KnightEnemy : MonoBehaviour {
             currentState = EnemyState.patrolling;
             animator.SetBool("isWalking", true);
             Walk();
-            yield return new WaitForSeconds(patrolWalkDuration);
+            float countdown = 0f;
+            while (countdown < patrolWalkDuration && currentState == EnemyState.patrolling)
+            {
+                countdown += Time.deltaTime;
+                yield return null;
+                continue;
+            }
 
             //waiting state
             currentState = EnemyState.waiting;
-            body.linearVelocity = Vector2.zero;
+            Stop();
             animator.SetBool("isWalking", false);
-            yield return new WaitForSeconds(patrolBreakDuration);
+            countdown = 0f;
+            while (countdown < patrolBreakDuration && currentState == EnemyState.waiting)
+            {
+                countdown += Time.deltaTime;
+                yield return null;
+                continue;
+            }
         }
     }
 
     public IEnumerator FeelDizzy()
     {
+        if (currentState == EnemyState.dizzy) yield break;
+
+        if (patrolRoutine != null )
+        {
+            StopCoroutine(patrolRoutine);
+            patrolRoutine = null;
+        }
+        SoundManager.instance.PlaySound(dizzySound);
         currentState = EnemyState.dizzy;
         Debug.Log("inside FeelDizzy()");
-        body.linearVelocity = Vector2.zero;
+        Stop();
         animator.SetBool("isFeelingDizzy", true);
         animator.SetBool("isWalking", false);
 
@@ -102,11 +127,12 @@ public class KnightEnemy : MonoBehaviour {
         animator.SetBool("isWalking", true);
         body.linearVelocity = new Vector2(speed, 0);
         currentState = EnemyState.patrolling;
-
+        patrolRoutine = StartCoroutine(Patrol());
     }
 
     private void Walk()
     {
+        if (currentState == EnemyState.dizzy) return;
         if (IsFacingRight() && transform.position.x < patrolCenterXPosition + patrolDistance)
             {
                 body.linearVelocity = new Vector2( speed, body.linearVelocity.y);
@@ -130,6 +156,11 @@ public class KnightEnemy : MonoBehaviour {
         transform.localScale = new Vector3 (-transform.localScale.x, transform.localScale.y, transform.localScale.z);
     }
 
+    public void Stop()
+    {
+        body.linearVelocity = Vector2.zero;
+    }
+
     private bool IsCollidingWithEnvironment()
     {
         return environmentCollisionScript.isColliding;
@@ -142,6 +173,7 @@ public class KnightEnemy : MonoBehaviour {
     
     public void StartAttack()
     {
+        if (currentState == EnemyState.dizzy) return;
         Debug.Log("Inside StartAttack()");
         if (patrolRoutine != null )
         {
@@ -151,7 +183,7 @@ public class KnightEnemy : MonoBehaviour {
         currentState = EnemyState.attacking;
         animator.SetBool("isAttacking", true);
         animator.SetBool("isWalking", false);
-        body.linearVelocity = Vector2.zero;
+        Stop();
         Debug.Log("End of StartAttack()");
 }
 
@@ -159,6 +191,8 @@ public class KnightEnemy : MonoBehaviour {
     public void GiveDamage()
     {
         Debug.Log("Inside GiveDamage()");
+        //SoundManager.instance.PlaySound(impactSound);
+        SoundManager.instance.PlaySound(swordAttackSound);
         if (attackScript != null && attackScript.player != null)
         {
             Debug.Log("Inside If, before playerHealth init");
@@ -192,8 +226,9 @@ public class KnightEnemy : MonoBehaviour {
         animator.SetBool("isWalking", true);
         body.linearVelocity = new Vector2(speed, body.linearVelocity.y);
         attackScript.ResetAttackCooldown();
-        patrolRoutine = StartCoroutine(Patrol());
         Flip();
+        patrolRoutine = StartCoroutine(Patrol());
+        
         Debug.Log("End of EndAttack()");
     }
 
@@ -207,6 +242,10 @@ public class KnightEnemy : MonoBehaviour {
         return currentState;
     }
 
+    private void DisableGameObject()
+    {
+        gameObject.SetActive(false);
+    }
 
 
 }
