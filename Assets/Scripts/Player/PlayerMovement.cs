@@ -33,6 +33,8 @@ public class Player : MonoBehaviour
     [SerializeField] private float coyoteCountdown;
     private bool onWall;
 
+    private PlayerAttack attackScript;
+
 
     [Header ("Audio")]
     [SerializeField] private AudioClip jumpSound;
@@ -43,11 +45,17 @@ public class Player : MonoBehaviour
         body = GetComponent<Rigidbody2D>();
         animator = GetComponent<Animator>();
         boxCollider = GetComponent<BoxCollider2D>();
+        attackScript = GetComponent<PlayerAttack>();
 
     }
     private void Update()
     {
-
+        if (attackScript.isRecoiling)   
+        {
+            animator.SetBool("isJumping", false);
+            animator.SetBool("isRunning", false);
+            return;
+        }
         onWall = isOnWall();
         
         horizontalInput = Input.GetAxisRaw("Horizontal");
