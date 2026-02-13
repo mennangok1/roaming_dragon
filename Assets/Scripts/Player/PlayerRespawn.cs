@@ -3,19 +3,25 @@ using UnityEngine;
 public class PlayerRespawn : MonoBehaviour
 {
     [SerializeField] private AudioClip checkpointSound;
+
+    private UIManager uiManager;
     private Transform lastCheckpoint;
 
     private Health playerHealth;
 
     private void Awake() {
         playerHealth = GetComponent<Health>();
-
+        uiManager = FindObjectOfType<UIManager>(); // use this when you are sure only one object of this type exists. Don't call this method repeatedly e.g. in Update()
     }
 
     public void CheckRespawn()
-    
+
     {
-        
+        if ( lastCheckpoint == null)
+        {
+            uiManager.GameOver();
+            return;
+        }
         //Move the player to last checkpoint
         transform.position = lastCheckpoint.position;
         
