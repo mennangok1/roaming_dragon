@@ -63,7 +63,7 @@ public class KnightEnemy : MonoBehaviour {
         }
         else if (currentState == EnemyState.attacking || currentState == EnemyState.dizzy || currentState == EnemyState.dead)
         {
-            Stop();
+            Stop(); 
         }
         if(IsCollidingWithEnvironment())
         {
@@ -73,6 +73,16 @@ public class KnightEnemy : MonoBehaviour {
     }
     private void OnCollisionEnter2D(Collision2D collision)
     {
+        if (collision.gameObject.CompareTag("Player"))
+        {
+            Health playerHealth = attackScript.player.GetComponent<Health>();
+            Debug.Log("After playerHealth init");
+            if (playerHealth != null)
+            {
+                Debug.Log("Before playerHealth Take damage");
+                playerHealth.TakeDamage(damage);
+            }
+        }
     }
 
     IEnumerator Patrol()

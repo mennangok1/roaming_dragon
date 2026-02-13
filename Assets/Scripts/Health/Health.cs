@@ -15,6 +15,7 @@ public class Health : MonoBehaviour
     [SerializeField] private AudioClip bipSound;
 
     protected bool isDead;
+    private bool isAtCheckpoint;
 
     protected Animator animator;
     private Rigidbody2D body;
@@ -26,6 +27,8 @@ public class Health : MonoBehaviour
     private float blinkWaitSeconds;
 
     private SpriteRenderer spriteRenderer;
+
+    private bool isInvincible;
 
 
     protected void Awake() {
@@ -40,6 +43,7 @@ public class Health : MonoBehaviour
 
     public void TakeDamage(float _damage)
     {
+        if (isInvincible) return;
         currentHealth = Mathf.Clamp(currentHealth - _damage, 0, initialHealth);
 
         if (currentHealth > 0)
@@ -52,7 +56,6 @@ public class Health : MonoBehaviour
             if (!isDead)
             {
                 SoundManager.instance.PlaySound(dieSound);
-                animator.SetTrigger("die");
                 animator.SetBool("isDead", true);
                 isDead = true;
             }
@@ -87,20 +90,40 @@ public class Health : MonoBehaviour
         body.simulated = false;
     }
 
+    private void EnableRigidbody()
+    {
+        body.simulated = true;
+    }
+
     protected IEnumerator Invincibility()
 
     {
-        Physics2D.IgnoreLayerCollision(9, 10, true);
+        isInvincible = true;
 
         for (int i = 0; i < numOfFlashes; i++)
         {
             spriteRenderer.color = new Color(1,0,0, 0.5f);
-            SoundManager.instance.PlaySound(bipSound);
+            if (!isAtCheckpoint)
+            {
+                SoundManager.instance.PlaySound(bipSound);
+            }
             yield return new WaitForSeconds(blinkWaitSeconds);
             spriteRenderer.color = Color.white;
             yield return new WaitForSeconds(blinkWaitSeconds);
         }
 
-        Physics2D.IgnoreLayerCollision(9, 10, false);
+        isInvincible = false;
+        isAtCheckpoint = false;
+    }
+
+    public void Respawn()
+    {
+        GainHealth(initialHealth);
+        animator.SetBool("isDead", false);
+        isDead = false;
+        animator.Play("Idle");
+        isAtCheckpoint = true;
+        StartCoroutine(Invincibility());
+        EnableRigidbody();
     }
 }

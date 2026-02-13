@@ -80,7 +80,7 @@ SpriteRenderer:
   m_LightmapParameters: {fileID: 0}
   m_GlobalIlluminationMeshLod: 0
   m_SortingLayerID: 1212912333
-  m_SortingLayer: 3
+  m_SortingLayer: 4
   m_SortingOrder: 0
   m_Sprite: {fileID: 3467533804743703493, guid: 9bed33b22a5ea47c290e081221e1e71d, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
@@ -106,6 +106,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::EnemyProjectile
   damage: 1
+  impactSound: {fileID: 0}
+  PlayerHitboxLayer:
+    serializedVersion: 2
+    m_Bits: 0
   speed: 5
   resetTime: 5
   lifeTime: 0
@@ -192,7 +196,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1369189385644896309}
   - component: {fileID: 3471914251727958391}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: ArrowTrap
   m_TagString: Untagged
   m_Icon: {fileID: 4162164826716764455, guid: 0000000000000000d000000000000000, type: 0}
@@ -242,6 +246,7 @@ MonoBehaviour:
   - {fileID: 6637134116458922711}
   - {fileID: 4562066762327682162}
   - {fileID: 4153939179110258781}
+  arrowSound: {fileID: 8300000, guid: 41428b09505cc4cbc81d4b0b239c88af, type: 3}
 --- !u!1 &2691531685798169117
 GameObject:
   m_ObjectHideFlags: 0
@@ -322,7 +327,7 @@ SpriteRenderer:
   m_LightmapParameters: {fileID: 0}
   m_GlobalIlluminationMeshLod: 0
   m_SortingLayerID: 1212912333
-  m_SortingLayer: 3
+  m_SortingLayer: 4
   m_SortingOrder: 0
   m_Sprite: {fileID: 3467533804743703493, guid: 9bed33b22a5ea47c290e081221e1e71d, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
@@ -348,6 +353,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::EnemyProjectile
   damage: 1
+  impactSound: {fileID: 0}
+  PlayerHitboxLayer:
+    serializedVersion: 2
+    m_Bits: 0
   speed: 5
   resetTime: 5
   lifeTime: 0
@@ -504,7 +513,7 @@ SpriteRenderer:
   m_LightmapParameters: {fileID: 0}
   m_GlobalIlluminationMeshLod: 0
   m_SortingLayerID: 1212912333
-  m_SortingLayer: 3
+  m_SortingLayer: 4
   m_SortingOrder: 0
   m_Sprite: {fileID: 3467533804743703493, guid: 9bed33b22a5ea47c290e081221e1e71d, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
@@ -530,6 +539,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::EnemyProjectile
   damage: 1
+  impactSound: {fileID: 0}
+  PlayerHitboxLayer:
+    serializedVersion: 2
+    m_Bits: 0
   speed: 5
   resetTime: 5
   lifeTime: 0
@@ -686,7 +699,7 @@ SpriteRenderer:
   m_LightmapParameters: {fileID: 0}
   m_GlobalIlluminationMeshLod: 0
   m_SortingLayerID: 1212912333
-  m_SortingLayer: 3
+  m_SortingLayer: 4
   m_SortingOrder: 0
   m_Sprite: {fileID: 3467533804743703493, guid: 9bed33b22a5ea47c290e081221e1e71d, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
@@ -712,6 +725,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::EnemyProjectile
   damage: 1
+  impactSound: {fileID: 0}
+  PlayerHitboxLayer:
+    serializedVersion: 2
+    m_Bits: 0
   speed: 5
   resetTime: 5
   lifeTime: 0
@@ -797,7 +814,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 3608255606611055836}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: ArrowHolder
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -909,7 +926,7 @@ SpriteRenderer:
   m_LightmapParameters: {fileID: 0}
   m_GlobalIlluminationMeshLod: 0
   m_SortingLayerID: 1212912333
-  m_SortingLayer: 3
+  m_SortingLayer: 4
   m_SortingOrder: 0
   m_Sprite: {fileID: 3467533804743703493, guid: 9bed33b22a5ea47c290e081221e1e71d, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
@@ -935,6 +952,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::EnemyProjectile
   damage: 1
+  impactSound: {fileID: 0}
+  PlayerHitboxLayer:
+    serializedVersion: 2
+    m_Bits: 0
   speed: 5
   resetTime: 5
   lifeTime: 0
@@ -1091,7 +1112,7 @@ SpriteRenderer:
   m_LightmapParameters: {fileID: 0}
   m_GlobalIlluminationMeshLod: 0
   m_SortingLayerID: 1212912333
-  m_SortingLayer: 3
+  m_SortingLayer: 4
   m_SortingOrder: 0
   m_Sprite: {fileID: 3467533804743703493, guid: 9bed33b22a5ea47c290e081221e1e71d, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
@@ -1117,6 +1138,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::EnemyProjectile
   damage: 1
+  impactSound: {fileID: 0}
+  PlayerHitboxLayer:
+    serializedVersion: 2
+    m_Bits: 0
   speed: 5
   resetTime: 5
   lifeTime: 0
@@ -1273,7 +1298,7 @@ SpriteRenderer:
   m_LightmapParameters: {fileID: 0}
   m_GlobalIlluminationMeshLod: 0
   m_SortingLayerID: 1212912333
-  m_SortingLayer: 3
+  m_SortingLayer: 4
   m_SortingOrder: 0
   m_Sprite: {fileID: 3467533804743703493, guid: 9bed33b22a5ea47c290e081221e1e71d, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
@@ -1299,6 +1324,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::EnemyProjectile
   damage: 1
+  impactSound: {fileID: 0}
+  PlayerHitboxLayer:
+    serializedVersion: 2
+    m_Bits: 0
   speed: 5
   resetTime: 5
   lifeTime: 0
@@ -1455,7 +1484,7 @@ SpriteRenderer:
   m_LightmapParameters: {fileID: 0}
   m_GlobalIlluminationMeshLod: 0
   m_SortingLayerID: 1212912333
-  m_SortingLayer: 3
+  m_SortingLayer: 4
   m_SortingOrder: 0
   m_Sprite: {fileID: 3467533804743703493, guid: 9bed33b22a5ea47c290e081221e1e71d, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
@@ -1481,6 +1510,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::EnemyProjectile
   damage: 1
+  impactSound: {fileID: 0}
+  PlayerHitboxLayer:
+    serializedVersion: 2
+    m_Bits: 0
   speed: 5
   resetTime: 5
   lifeTime: 0
@@ -1567,7 +1600,7 @@ GameObject:
   m_Component:
   - component: {fileID: 2200968036302710187}
   - component: {fileID: 2285020078466920298}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: sprite
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1727,7 +1760,7 @@ SpriteRenderer:
   m_LightmapParameters: {fileID: 0}
   m_GlobalIlluminationMeshLod: 0
   m_SortingLayerID: 1212912333
-  m_SortingLayer: 3
+  m_SortingLayer: 4
   m_SortingOrder: 0
   m_Sprite: {fileID: 3467533804743703493, guid: 9bed33b22a5ea47c290e081221e1e71d, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
@@ -1753,6 +1786,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::EnemyProjectile
   damage: 1
+  impactSound: {fileID: 0}
+  PlayerHitboxLayer:
+    serializedVersion: 2
+    m_Bits: 0
   speed: 5
   resetTime: 5
   lifeTime: 0
@@ -1838,7 +1875,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4146576230277840376}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: FirePoint
   m_TagString: Untagged
   m_Icon: {fileID: -5487077368411116049, guid: 0000000000000000d000000000000000, type: 0}
@@ -1940,7 +1977,7 @@ SpriteRenderer:
   m_LightmapParameters: {fileID: 0}
   m_GlobalIlluminationMeshLod: 0
   m_SortingLayerID: 1212912333
-  m_SortingLayer: 3
+  m_SortingLayer: 4
   m_SortingOrder: 0
   m_Sprite: {fileID: 3467533804743703493, guid: 9bed33b22a5ea47c290e081221e1e71d, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
@@ -1966,6 +2003,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::EnemyProjectile
   damage: 1
+  impactSound: {fileID: 0}
+  PlayerHitboxLayer:
+    serializedVersion: 2
+    m_Bits: 0
   speed: 5
   resetTime: 5
   lifeTime: 0
