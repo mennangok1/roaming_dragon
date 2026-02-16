@@ -47,7 +47,13 @@ public class Projectile : MonoBehaviour
             hit = true;
             boxCollider.enabled = false;
             animator.SetTrigger("explode");
-            collision.GetComponentInParent<EnemyHealth>().TakeDamage(damage);
+
+            EnemyHealth enemyHealth = collision.GetComponentInParent<EnemyHealth>();
+            if (enemyHealth != null)
+            {
+                enemyHealth.TakeDamage(damage, transform.position);
+            }
+
             SoundManager.instance.PlaySound(impactSound);
         
         }

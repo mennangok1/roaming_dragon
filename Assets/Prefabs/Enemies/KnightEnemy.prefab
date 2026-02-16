@@ -266,6 +266,8 @@ MonoBehaviour:
   dizzySound: {fileID: 8300000, guid: 04ba79bac302d4aa8813b159378c8038, type: 3}
   impactSound: {fileID: 8300000, guid: e288317433bd14240a6c0fb079ce0f36, type: 3}
   dizzyDuration: 3
+  projectileRecoilForce: 5
+  projectileRecoilDuration: 1.15
 --- !u!61 &8474612413635203020
 BoxCollider2D:
   m_ObjectHideFlags: 0

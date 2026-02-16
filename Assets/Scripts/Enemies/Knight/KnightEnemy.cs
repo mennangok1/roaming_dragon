@@ -20,7 +20,7 @@ public class KnightEnemy : MonoBehaviour {
     [SerializeField] private LayerMask playerLayer;
     [SerializeField] private LayerMask groundLayer;
 
-    public enum EnemyState {patrolling, waiting, chasing, attacking, dizzy, dead}
+    public enum EnemyState {patrolling, waiting, chasing, attacking, dizzy, dead, recoiling}
     private EnemyState currentState;
     
     private KnightEnvironmentCollision environmentCollisionScript;
@@ -34,6 +34,9 @@ public class KnightEnemy : MonoBehaviour {
 
 
     [SerializeField] private float dizzyDuration;
+    [SerializeField] private float projectileRecoilForce = 5f;
+    [SerializeField] private float projectileRecoilDuration = 0.2f;
+    private Coroutine recoilRoutine;
 
     protected void Awake() {
         // set patrol center, get rigidbody, animator, and collider components
@@ -257,5 +260,56 @@ public class KnightEnemy : MonoBehaviour {
         gameObject.SetActive(false);
     }
 
+    public void ApplyProjectileRecoil(Vector2 hitPoint)
+    {
+        if (currentState == EnemyState.dead)
+        {
+            return;
+        }
+
+        if (recoilRoutine != null)
+        {
+            StopCoroutine(recoilRoutine);
+        }
+
+        recoilRoutine = StartCoroutine(RecoilRoutine(hitPoint.x));
+    }
+
+    private IEnumerator RecoilRoutine(float hitPointX)
+    {
+        if (patrolRoutine != null)
+        {
+            StopCoroutine(patrolRoutine);
+            patrolRoutine = null;
+        }
+
+        currentState = EnemyState.recoiling;
+        animator.SetBool("isWalking", false);
+        animator.SetBool("isAttacking", false);
+        Stop();
+
+        float recoilDirectionX = Mathf.Sign(transform.position.x - hitPointX);
+        if (recoilDirectionX == 0f)
+        {
+            recoilDirectionX = IsFacingRight() ? -1f : 1f;
+        }
+
+        Vector2 recoilDir = new Vector2(recoilDirectionX, 0f);
+        body.AddForce(recoilDir * projectileRecoilForce, ForceMode2D.Impulse);
+
+        yield return new WaitForSeconds(projectileRecoilDuration);
+
+        if (currentState != EnemyState.recoiling)
+        {
+            recoilRoutine = null;
+            yield break;
+        }
+
+        currentState = EnemyState.patrolling;
+        animator.SetBool("isWalking", true);
+        patrolRoutine = StartCoroutine(Patrol());
+        recoilRoutine = null;
+    }
+    
 
 }
