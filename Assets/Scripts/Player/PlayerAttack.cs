@@ -12,6 +12,7 @@ public class PlayerAttack : MonoBehaviour
     [SerializeField] private AudioClip fireballSound;
 
     private Rigidbody2D body;
+    private BoxCollider2D boxCollider;
 
     private float cooldownTimer = Mathf.Infinity;
     private Animator animator;
@@ -21,13 +22,17 @@ public class PlayerAttack : MonoBehaviour
     [Header ("Recoil")]
     public bool isRecoiling = false;
 
-    [SerializeField] private float recoilDuration = 2f;
-    [SerializeField] private float recoilForce = 5f;
+    [SerializeField] private float recoilDuration = 0.12f;
+    [SerializeField] private float recoilKickSpeed = 6f;
+    [SerializeField] private float groundRecoilDamping = 80f;
+    [SerializeField] private float airRecoilDamping = 25f;
+    private Coroutine recoilRoutine;
 
     private void Awake() {
         animator = GetComponent<Animator>();
         player = GetComponent<Player>();
         body = GetComponent<Rigidbody2D>();
+        boxCollider = GetComponent<BoxCollider2D>();
 
     }
 
@@ -51,7 +56,12 @@ public class PlayerAttack : MonoBehaviour
         fireBalls[ availableFireballIndex ].transform.position = firePoint.position;
         fireBalls[ availableFireballIndex ].GetComponent<Projectile>().SetDirection(Mathf.Sign(transform.localScale.x));
 
-        StartCoroutine(RecoilRoutine());
+        if (recoilRoutine != null)
+        {
+            StopCoroutine(recoilRoutine);
+        }
+
+        recoilRoutine = StartCoroutine(RecoilRoutine());
 
     }
 
@@ -59,14 +69,29 @@ public class PlayerAttack : MonoBehaviour
     IEnumerator RecoilRoutine()
     {
         isRecoiling = true;
-        Vector2 recoilDir = new Vector2(-transform.localScale.x, 0);
+        float recoilDirectionX = -Mathf.Sign(transform.localScale.x);
+        if (recoilDirectionX == 0f)
+        {
+            recoilDirectionX = -1f;
+        }
 
-        body.AddForce(recoilDir * recoilForce, ForceMode2D.Impulse);
+        // Initial kick: gives the recoil an immediate "impact" feel.
+        body.linearVelocity = new Vector2(body.linearVelocity.x + (recoilDirectionX * recoilKickSpeed), body.linearVelocity.y);
 
-        yield return new WaitForSeconds(recoilDuration);
+        float elapsed = 0f;
+        while (elapsed < recoilDuration)
+        {
+            float damping = player.isGrounded ? groundRecoilDamping : airRecoilDamping;
+            float newVelocityX = Mathf.MoveTowards(body.linearVelocity.x, 0f, damping * Time.fixedDeltaTime);
+            body.linearVelocity = new Vector2(newVelocityX, body.linearVelocity.y);
+
+            elapsed += Time.fixedDeltaTime;
+            yield return new WaitForFixedUpdate();
+        }
+
         isRecoiling = false;
+        recoilRoutine = null;
     }
-
 
 
     private int FindFireball()

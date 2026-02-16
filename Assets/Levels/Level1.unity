@@ -7705,6 +7705,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: KnightEnemy
       objectReference: {fileID: 0}
+    - target: {fileID: 6121499854008471477, guid: 1fdde161d8f6d4093b7b37387de4f55a, type: 3}
+      propertyPath: initialHealth
+      value: 10
+      objectReference: {fileID: 0}
     - target: {fileID: 7209672215228280288, guid: 1fdde161d8f6d4093b7b37387de4f55a, type: 3}
       propertyPath: m_LocalPosition.x
       value: -0.034125686
@@ -7744,6 +7748,14 @@ PrefabInstance:
     - target: {fileID: 7209672215228280288, guid: 1fdde161d8f6d4093b7b37387de4f55a, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8063726391545370748, guid: 1fdde161d8f6d4093b7b37387de4f55a, type: 3}
+      propertyPath: projectileRecoilForce
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 8063726391545370748, guid: 1fdde161d8f6d4093b7b37387de4f55a, type: 3}
+      propertyPath: projectileRecoilDuration
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

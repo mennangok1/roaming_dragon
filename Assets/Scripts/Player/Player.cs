@@ -35,6 +35,7 @@ public class Player : MonoBehaviour
 
     private PlayerAttack attackScript;
 
+    public bool isGrounded {get; private set;}
 
     [Header ("Audio")]
     [SerializeField] private AudioClip jumpSound;
@@ -50,6 +51,7 @@ public class Player : MonoBehaviour
     }
     private void Update()
     {
+        isGrounded = IsGrounded();
         if (attackScript.isRecoiling)   
         {
             animator.SetBool("isJumping", false);
@@ -73,7 +75,7 @@ public class Player : MonoBehaviour
             Flip(horizontalInput);
         }
 
-        if (isGrounded())
+        if (IsGrounded())
         {
             coyoteCountdown = coyoteTime;
         }
@@ -86,7 +88,7 @@ public class Player : MonoBehaviour
         {
             GroundJump();
         }
-        else if (Input.GetKeyDown(KeyCode.Space) && isOnWall() && !isGrounded())
+        else if (Input.GetKeyDown(KeyCode.Space) && isOnWall() && !IsGrounded())
         {
             WallJump();
         }
@@ -97,7 +99,7 @@ public class Player : MonoBehaviour
         }
 
         // Wall slide
-        if (isOnWall() && !isGrounded() && wallJumpLockCounter <= 0f)
+        if (isOnWall() && !IsGrounded() && wallJumpLockCounter <= 0f)
         {
             body.gravityScale = 0f;
             body.linearVelocity = new Vector2(body.linearVelocity.x, -1f);
@@ -108,8 +110,8 @@ public class Player : MonoBehaviour
         }
 
         animator.SetBool("isRunning", horizontalInput != 0);
-        animator.SetBool("isGrounded", isGrounded());
-        animator.SetBool("isJumping", !isGrounded() && !isOnWall());
+        animator.SetBool("isGrounded", IsGrounded());
+        animator.SetBool("isJumping", !IsGrounded() && !isOnWall());
     }
 
 
@@ -144,7 +146,7 @@ public class Player : MonoBehaviour
     {
     }
 
-    private bool isGrounded()
+    private bool IsGrounded()
     {
 
         RaycastHit2D raycastHitGround = Physics2D.BoxCast(boxCollider.bounds.center, boxCollider.bounds.size,0, Vector2.down, 0.1f, groundLayer);
