@@ -262,6 +262,9 @@ MonoBehaviour:
   groundLayer:
     serializedVersion: 2
     m_Bits: 256
+  swordAttackSound: {fileID: 8300000, guid: 13fc727b8dac347589f9c3ac0fe95d89, type: 3}
+  dizzySound: {fileID: 8300000, guid: 04ba79bac302d4aa8813b159378c8038, type: 3}
+  impactSound: {fileID: 8300000, guid: e288317433bd14240a6c0fb079ce0f36, type: 3}
   dizzyDuration: 3
 --- !u!61 &8474612413635203020
 BoxCollider2D:
@@ -322,6 +325,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::EnemyHealth
   initialHealth: 2
+  dieSound: {fileID: 0}
+  collectHeartSound: {fileID: 0}
+  bipSound: {fileID: 0}
   invincibleDuration: 1
   numOfFlashes: 4
   feelDizzyIfHealthIsBelow: 1
