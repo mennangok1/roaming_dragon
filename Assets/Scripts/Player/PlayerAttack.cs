@@ -12,7 +12,6 @@ public class PlayerAttack : MonoBehaviour
     [SerializeField] private AudioClip fireballSound;
 
     private Rigidbody2D body;
-    private BoxCollider2D boxCollider;
 
     private float cooldownTimer = Mathf.Infinity;
     private Animator animator;
@@ -32,8 +31,6 @@ public class PlayerAttack : MonoBehaviour
         animator = GetComponent<Animator>();
         player = GetComponent<Player>();
         body = GetComponent<Rigidbody2D>();
-        boxCollider = GetComponent<BoxCollider2D>();
-
     }
 
     private void Update() {

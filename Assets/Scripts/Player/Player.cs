@@ -5,7 +5,7 @@ public class Player : MonoBehaviour
     private Rigidbody2D body;
     private Animator animator;
 
-    private BoxCollider2D boxCollider;
+    private CapsuleCollider2D collider;
 
     [SerializeField] private LayerMask groundLayer;
 
@@ -45,7 +45,7 @@ public class Player : MonoBehaviour
     {
         body = GetComponent<Rigidbody2D>();
         animator = GetComponent<Animator>();
-        boxCollider = GetComponent<BoxCollider2D>();
+        collider = GetComponent<CapsuleCollider2D>();
         attackScript = GetComponent<PlayerAttack>();
 
     }
@@ -149,7 +149,7 @@ public class Player : MonoBehaviour
     private bool IsGrounded()
     {
 
-        RaycastHit2D raycastHitGround = Physics2D.BoxCast(boxCollider.bounds.center, boxCollider.bounds.size,0, Vector2.down, 0.1f, groundLayer);
+        RaycastHit2D raycastHitGround = Physics2D.BoxCast(collider.bounds.center, collider.bounds.size,0, Vector2.down, 0.1f, groundLayer);
 
         return raycastHitGround.collider != null;
     }
@@ -159,7 +159,7 @@ public class Player : MonoBehaviour
     }
     private bool isOnWall()
     {
-        RaycastHit2D raycastHitWall = Physics2D.BoxCast(boxCollider.bounds.center, boxCollider.bounds.size, 0, new Vector2(transform.localScale.x, 0), 0.1f, wallLayer);
+        RaycastHit2D raycastHitWall = Physics2D.BoxCast(collider.bounds.center, collider.bounds.size, 0, new Vector2(transform.localScale.x, 0), 0.1f, wallLayer);
 
         return raycastHitWall.collider != null;
     }
