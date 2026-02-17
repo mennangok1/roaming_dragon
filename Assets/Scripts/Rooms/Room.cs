@@ -1,8 +1,10 @@
 using UnityEngine;
+using System.Collections;
 
 public class Room : MonoBehaviour
 {
     [SerializeField] private GameObject[] enemies;
+    [SerializeField] private float resetCooldown = 2f;
 
     private Vector3[] initialPosition;
 
@@ -21,6 +23,12 @@ public class Room : MonoBehaviour
 
     public void ActivateRoom(bool status)
     {
+        ResetRoomRoutine(status);
+    }
+
+    private IEnumerator ResetRoomRoutine(bool status)
+    {
+        yield return new WaitForSeconds(resetCooldown);
         for ( int i = 0; i < enemies.Length; i++)
         {
             if (enemies[i] != null)

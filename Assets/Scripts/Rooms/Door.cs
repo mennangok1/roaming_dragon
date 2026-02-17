@@ -23,7 +23,7 @@ public class Door : MonoBehaviour
         }
     }
 
-    private void OnTriggerEnter2D(Collider2D collision) {
+     private void OnTriggerEnter2D(Collider2D collision) {
         if (collision.tag == "Player")
         {
             if (collision.transform.position.x < transform.position.x)
@@ -38,7 +38,7 @@ public class Door : MonoBehaviour
             }
             
         }
-    }
+    } 
 
 
     private void TransitionRooms(Transform fromRoom, Transform toRoom)
