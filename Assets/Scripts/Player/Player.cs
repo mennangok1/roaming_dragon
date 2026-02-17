@@ -22,6 +22,9 @@ public class Player : MonoBehaviour
     [SerializeField] private float wallJumpForceY = 10f;
     [SerializeField] private float wallJumpLockTime = 0.15f;
     [SerializeField] private float defaultGravity = 5f;
+    [Header ("Jump Gravity")]
+    [SerializeField] private float upwardGravityMultiplier = 1f;
+    [SerializeField] private float downwardGravityMultiplier = 2f;
 
     [SerializeField] private float wallJumpGravityMultiplier = 5f;
 
@@ -121,7 +124,7 @@ public class Player : MonoBehaviour
         }
         else
         {
-            body.gravityScale = defaultGravity;
+            ApplyVerticalGravity();
         }
 
         animator.SetBool("isRunning", horizontalInput != 0);
@@ -133,7 +136,7 @@ public class Player : MonoBehaviour
     private void GroundJump()
     {
 
-        body.gravityScale = defaultGravity;
+        body.gravityScale = defaultGravity * upwardGravityMultiplier;
         body.linearVelocity = new Vector2(body.linearVelocity.x, jumpForce);
         SoundManager.instance.PlaySound(jumpSound);
         coyoteCountdown = 0;
@@ -195,6 +198,28 @@ public class Player : MonoBehaviour
     {
         // +1 = wall on right, -1 = wall on left
         return Mathf.RoundToInt(Mathf.Sign(transform.localScale.x));
+    }
+
+    private void ApplyVerticalGravity()
+    {
+        if (wallJumpLockCounter > 0f)
+        {
+            body.gravityScale = defaultGravity * wallJumpGravityMultiplier;
+            return;
+        }
+
+        if (body.linearVelocity.y > 0.01f)
+        {
+            body.gravityScale = defaultGravity * upwardGravityMultiplier;
+        }
+        else if (body.linearVelocity.y < -0.01f)
+        {
+            body.gravityScale = defaultGravity * downwardGravityMultiplier;
+        }
+        else
+        {
+            body.gravityScale = defaultGravity;
+        }
     }
 
 
