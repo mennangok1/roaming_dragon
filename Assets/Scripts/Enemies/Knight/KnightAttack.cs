@@ -13,10 +13,12 @@ public class KnightAttack: MonoBehaviour
 
     private bool isAttacking;
     public bool isPlayerInRange {get; private set;}
+    private KnightEnemy enemy;
 
     private void Awake() {
         attackCooldown = attackDelay;
         collider = GetComponent<CircleCollider2D>();
+        enemy = GetComponentInParent<KnightEnemy>();
     }
     private void Update() {
         isPlayerInRange = collider.IsTouchingLayers(playerLayer);
@@ -30,7 +32,6 @@ public class KnightAttack: MonoBehaviour
     private void TryAttack(Collider2D other) {
         if (attackCooldown > attackDelay && !other.GetComponentInParent<Health>().IsDead())
         {
-            KnightEnemy enemy = GetComponentInParent<KnightEnemy>();
             player = other.transform.parent.gameObject;
             enemy.StartAttack();
         }
@@ -39,6 +40,7 @@ public class KnightAttack: MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D other)
     {
+        if (enemy.GetCurrentState() == KnightEnemy.EnemyState.dead) return;
         if (other.gameObject.layer == LayerMask.NameToLayer("PlayerHitbox"))
         {
             TryAttack(other);
@@ -47,6 +49,7 @@ public class KnightAttack: MonoBehaviour
 
     private void OnTriggerStay2D(Collider2D other)
     {
+        if (enemy.GetCurrentState() == KnightEnemy.EnemyState.dead) return;
         if (other.gameObject.layer == LayerMask.NameToLayer("PlayerHitbox"))
         {
             TryAttack(other);

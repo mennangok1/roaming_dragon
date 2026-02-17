@@ -145,7 +145,7 @@ public class KnightEnemy : MonoBehaviour {
 
     private void Walk()
     {
-        if (currentState == EnemyState.dizzy) return;
+        if (currentState == EnemyState.dizzy || currentState == EnemyState.dead) return;
         if (IsFacingRight() && transform.position.x < patrolCenterXPosition + patrolDistance)
             {
                 body.linearVelocity = new Vector2( speed, body.linearVelocity.y);
@@ -186,7 +186,7 @@ public class KnightEnemy : MonoBehaviour {
     
     public void StartAttack()
     {
-        if (currentState == EnemyState.dizzy) return;
+        if (currentState == EnemyState.dizzy || currentState == EnemyState.dead) return;
         Debug.Log("Inside StartAttack()");
         if (patrolRoutine != null )
         {
@@ -260,6 +260,15 @@ public class KnightEnemy : MonoBehaviour {
         gameObject.SetActive(false);
     }
 
+    private void DisableComponents()
+    {
+        collider.enabled = false;
+        body.simulated = false;
+        foreach (Transform child in transform)
+        {
+            child.gameObject.SetActive(false);
+        }
+    }
     public void ApplyProjectileRecoil(Vector2 hitPoint)
     {
         if (currentState == EnemyState.dead)
