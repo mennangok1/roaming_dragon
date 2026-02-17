@@ -11,7 +11,12 @@ public class Player : MonoBehaviour
 
     [SerializeField] private LayerMask wallLayer;
 
+    [Header ("Horizontal Movement")]
     [SerializeField] private float xSpeed = 6f;
+    [SerializeField] private float groundAcceleration = 80f;
+    [SerializeField] private float airAcceleration = 45f;
+    [SerializeField] private float groundDeceleration = 90f;
+    [SerializeField] private float airDeceleration = 35f;
 
     [SerializeField] private float wallJumpForceX = 12f;
     [SerializeField] private float wallJumpForceY = 10f;
@@ -67,10 +72,20 @@ public class Player : MonoBehaviour
         // Apply horizontal movement ONLY if not locked by wall jump
         if (wallJumpLockCounter <= 0f)
         {
-            body.linearVelocity = new Vector2(
-                horizontalInput * xSpeed,
-                body.linearVelocity.y
+            float targetSpeed = horizontalInput * xSpeed;
+            float currentSpeed = body.linearVelocity.x;
+            bool hasInput = Mathf.Abs(horizontalInput) > 0.01f;
+            float accelRate = hasInput
+                ? (isGrounded ? groundAcceleration : airAcceleration)
+                : (isGrounded ? groundDeceleration : airDeceleration);
+
+            float newSpeed = Mathf.MoveTowards(
+                currentSpeed,
+                targetSpeed,
+                accelRate * Time.deltaTime
             );
+
+            body.linearVelocity = new Vector2(newSpeed, body.linearVelocity.y);
 
             Flip(horizontalInput);
         }
