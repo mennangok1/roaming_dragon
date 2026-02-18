@@ -40,6 +40,14 @@ public class Player : MonoBehaviour
     [Header("Scale")]
     [SerializeField] private float playerScale = 1.5f; 
 
+    [Header("Corner Correction")]
+    [SerializeField] private bool enableCornerCorrection = true;
+    [SerializeField] private float cornerCorrectionDistance = 0.08f;
+    [SerializeField] private float cornerCeilingCheckDistance = 0.05f;
+    [SerializeField] private float cornerProbeInset = 0.02f;
+    [SerializeField] private float cornerPostCorrectionClearance = 0.2f;
+    [SerializeField] private float cornerCorrectionCooldown = 0.06f;
+
     private float coyoteCountdown;
     private float horizontalInput;
 
@@ -55,6 +63,7 @@ public class Player : MonoBehaviour
 
     private int jumpBufferCheckInterval = 20;
     private Coroutine jumpBufferRoutine;
+    private float cornerCorrectionCooldownCounter;
     private void Awake()
     {
         body = GetComponent<Rigidbody2D>();
@@ -77,6 +86,7 @@ public class Player : MonoBehaviour
         horizontalInput = Input.GetAxisRaw("Horizontal");
 
         wallJumpLockCounter -= Time.deltaTime;
+        cornerCorrectionCooldownCounter -= Time.deltaTime;
 
         // Apply horizontal movement ONLY if not locked by wall jump
         if (wallJumpLockCounter <= 0f)
@@ -132,6 +142,8 @@ public class Player : MonoBehaviour
         {
             body.linearVelocity = new Vector2(body.linearVelocity.x, body.linearVelocity.y / 2);
         }
+
+        TryCornerCorrection();
 
         // Wall slide
         if (isOnWall() && !IsGrounded() && wallJumpLockCounter <= 0f)
@@ -237,6 +249,79 @@ public class Player : MonoBehaviour
         {
             body.gravityScale = defaultGravity;
         }
+    }
+
+    private void TryCornerCorrection()
+    {
+        if (!enableCornerCorrection || cornerCorrectionCooldownCounter > 0f) return;
+        if (body.linearVelocity.y <= 0.01f) return;
+        if (!HasCeilingAbove(0f, cornerCeilingCheckDistance)) return;
+
+        bool leftBlocked = IsTopCornerBlocked(true);
+        bool rightBlocked = IsTopCornerBlocked(false);
+
+        if (leftBlocked == rightBlocked) return;
+
+        float correctionDirection = leftBlocked ? 1f : -1f;
+
+        if (!CanApplyCornerCorrection(correctionDirection)) return;
+
+        transform.position += new Vector3(correctionDirection * cornerCorrectionDistance, 0f, 0f);
+        cornerCorrectionCooldownCounter = cornerCorrectionCooldown;
+    }
+
+    private bool HasCeilingAbove(float xOffset, float checkDistance)
+    {
+        Vector2 center = (Vector2)collider.bounds.center + new Vector2(xOffset, 0f);
+        Vector2 size = collider.bounds.size * 0.98f;
+        RaycastHit2D hit = Physics2D.BoxCast(
+            center,
+            size,
+            0f,
+            Vector2.up,
+            checkDistance,
+            groundLayer
+        );
+
+        return hit.collider != null;
+    }
+
+    private bool IsTopCornerBlocked(bool checkLeftCorner)
+    {
+        Bounds bounds = collider.bounds;
+        float x = checkLeftCorner
+            ? bounds.min.x + cornerProbeInset
+            : bounds.max.x - cornerProbeInset;
+
+        Vector2 origin = new Vector2(x, bounds.max.y);
+        RaycastHit2D hit = Physics2D.Raycast(
+            origin,
+            Vector2.up,
+            cornerCeilingCheckDistance,
+            groundLayer
+        );
+
+        return hit.collider != null;
+    }
+
+    private bool CanApplyCornerCorrection(float correctionDirection)
+    {
+        Vector2 size = collider.bounds.size * 0.95f;
+        RaycastHit2D horizontalBlock = Physics2D.BoxCast(
+            collider.bounds.center,
+            size,
+            0f,
+            Vector2.right * correctionDirection,
+            cornerCorrectionDistance,
+            groundLayer
+        );
+
+        if (horizontalBlock.collider != null) return false;
+
+        return !HasCeilingAbove(
+            correctionDirection * cornerCorrectionDistance,
+            cornerPostCorrectionClearance
+        );
     }
 
 
