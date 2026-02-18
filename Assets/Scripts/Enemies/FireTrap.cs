@@ -47,7 +47,7 @@ public class FireTrap : MonoBehaviour
             // if active, hurt the player
             if (isActive)
             {
-                other.GetComponent<Health>().TakeDamage(damage);
+                other.GetComponentInParent<Health>().TakeDamage(damage);
             }
         }
     }

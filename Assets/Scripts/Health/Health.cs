@@ -6,7 +6,9 @@ public class Health : MonoBehaviour
 
     [Header ("Health Parameters")]
     [SerializeField] protected float initialHealth;
-    [SerializeField] public float currentHealth {get; protected set;}
+    [SerializeField] protected float initialGlobalHealth;
+    [SerializeField] protected float currentHealth;
+    [SerializeField] protected float currentGlobalHealth;
 
 
     [Header("Audio")]
@@ -33,7 +35,7 @@ public class Health : MonoBehaviour
 
     protected void Awake() {
         currentHealth = initialHealth;
-
+        currentGlobalHealth = initialGlobalHealth;
         animator = GetComponent<Animator>();
         spriteRenderer = GetComponent<SpriteRenderer>();
         blinkWaitSeconds = invincibleDuration / (2 * numOfFlashes);
@@ -58,6 +60,7 @@ public class Health : MonoBehaviour
                 SoundManager.instance.PlaySound(dieSound);
                 animator.SetBool("isDead", true);
                 isDead = true;
+                currentGlobalHealth -= 1;
             }
         }
     }
@@ -66,6 +69,11 @@ public class Health : MonoBehaviour
     {
         SoundManager.instance.PlaySound(collectHeartSound);
         currentHealth = Mathf.Clamp(currentHealth + gain, 0, initialHealth);
+    }
+    public void GainGlobalHealth( float gain )
+    {
+        SoundManager.instance.PlaySound(collectHeartSound);
+        currentGlobalHealth += gain;
     }
 
     private void Update() {
@@ -79,7 +87,6 @@ public class Health : MonoBehaviour
     {
         return currentHealth == initialHealth;
     }
-
     public bool IsDead()
     {
         return isDead;
@@ -126,4 +133,15 @@ public class Health : MonoBehaviour
         StartCoroutine(Invincibility());
         EnableRigidbody();
     }
+
+    public float GetCurrentHealth()
+    {
+        return currentHealth;
+    }
+    public float GetCurrentGlobalHealth()
+    {
+        return currentGlobalHealth;
+    }
+
+
 }

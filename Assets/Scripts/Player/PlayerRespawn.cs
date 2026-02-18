@@ -7,7 +7,10 @@ public class PlayerRespawn : MonoBehaviour
     private UIManager uiManager;
     private Transform lastCheckpoint;
 
+    private Vector3 initialPosition;
+
     private Health playerHealth;
+    
 
     private void Awake() {
         playerHealth = GetComponent<Health>();
@@ -17,9 +20,15 @@ public class PlayerRespawn : MonoBehaviour
     public void CheckRespawn()
 
     {
-        if ( lastCheckpoint == null)
+        if ( playerHealth.GetCurrentGlobalHealth() < 1)
         {
             uiManager.GameOver();
+            return;
+        }
+        if (lastCheckpoint == null)
+        {
+            transform.position = initialPosition;
+            playerHealth.Respawn();
             return;
         }
         //Move the player to last checkpoint
@@ -40,7 +49,10 @@ public class PlayerRespawn : MonoBehaviour
             other.GetComponent<Collider2D>().enabled = false;
             other.GetComponent<Animator>().SetBool("isChecked", true);
         }
+    }
 
-
+    public void SetInitialPoisition(Vector3 _initialPosition)
+    {
+        initialPosition = _initialPosition;
     }
 }

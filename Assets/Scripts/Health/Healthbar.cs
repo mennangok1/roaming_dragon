@@ -9,10 +9,10 @@ public class Healthbar : MonoBehaviour
     [SerializeField] private Image currentHealthbar;
 
     private void Start() {
-        totalHealthbar.fillAmount = playerHealth.currentHealth / 10;    
+        totalHealthbar.fillAmount = playerHealth.GetCurrentHealth() / 10;    
     }
 
     private void Update() {
-        currentHealthbar.fillAmount = playerHealth.currentHealth / 10;
+        currentHealthbar.fillAmount = playerHealth.GetCurrentHealth() / 10;
     }
 }

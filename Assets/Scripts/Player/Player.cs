@@ -56,7 +56,6 @@ public class Player : MonoBehaviour
 
     private float wallJumpCooldown;
     private PlayerAttack attackScript;
-
     public bool isGrounded {get; private set;}
 
     private int jumpBufferCheckInterval = 20;
@@ -68,7 +67,7 @@ public class Player : MonoBehaviour
         animator = GetComponent<Animator>();
         collider = GetComponent<CapsuleCollider2D>();
         attackScript = GetComponent<PlayerAttack>();
-
+        GetComponent<PlayerRespawn>().SetInitialPoisition(transform.position);
     }
     private void Update()
     {
