@@ -42,6 +42,7 @@ public class ThinPlatform : MonoBehaviour
         Physics2D.IgnoreLayerCollision(playerLayerIndex, thinPlatformLayerIndex, true);
         isInactive = true;
         yield return new WaitForSeconds(inactiveDurationAfterJumpingFromPlatform);
+        isInactive = false;
         Physics2D.IgnoreLayerCollision(playerLayerIndex, thinPlatformLayerIndex, false);
     }
 }

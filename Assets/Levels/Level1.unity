@@ -3321,6 +3321,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 6499913417149771726, guid: 2cea3301eb0f9417ab1e7f90950c0b81, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -6702,12 +6706,20 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 1706500860965369843, guid: 5abc954a568824aed9b9c781364a380a, type: 3}
+      propertyPath: m_Size.x
+      value: 0.18257928
+      objectReference: {fileID: 0}
+    - target: {fileID: 1706500860965369843, guid: 5abc954a568824aed9b9c781364a380a, type: 3}
       propertyPath: m_Size.y
-      value: 3.7661715
+      value: 3.543362
+      objectReference: {fileID: 0}
+    - target: {fileID: 1706500860965369843, guid: 5abc954a568824aed9b9c781364a380a, type: 3}
+      propertyPath: m_Offset.x
+      value: -0.20129406
       objectReference: {fileID: 0}
     - target: {fileID: 1706500860965369843, guid: 5abc954a568824aed9b9c781364a380a, type: 3}
       propertyPath: m_Offset.y
-      value: 1.8209643
+      value: 1.7095596
       objectReference: {fileID: 0}
     - target: {fileID: 1837701704098865131, guid: 5abc954a568824aed9b9c781364a380a, type: 3}
       propertyPath: m_LocalPosition.x
@@ -9133,11 +9145,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1288954150413682203, guid: dcf5b5d8b838c4ca1819c6484f84baad, type: 3}
       propertyPath: m_LocalScale.x
-      value: 1.5
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 1288954150413682203, guid: dcf5b5d8b838c4ca1819c6484f84baad, type: 3}
       propertyPath: m_LocalScale.y
-      value: 1.5
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 1288954150413682203, guid: dcf5b5d8b838c4ca1819c6484f84baad, type: 3}
       propertyPath: m_LocalPosition.x
@@ -9183,6 +9195,10 @@ PrefabInstance:
       propertyPath: checkpointSound
       value: 
       objectReference: {fileID: 8300000, guid: 21bd1306b699c4a2a8ad3539660b0a39, type: 3}
+    - target: {fileID: 3103036626017122537, guid: dcf5b5d8b838c4ca1819c6484f84baad, type: 3}
+      propertyPath: playerScale
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 3103036626017122537, guid: dcf5b5d8b838c4ca1819c6484f84baad, type: 3}
       propertyPath: jumpBufferDuration
       value: 0.2
