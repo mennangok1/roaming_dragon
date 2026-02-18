@@ -5224,6 +5224,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: PileOfBoxes
       objectReference: {fileID: 0}
+    - target: {fileID: 1905924434579216332, guid: 2cea3301eb0f9417ab1e7f90950c0b81, type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 2799414325170468627, guid: 2cea3301eb0f9417ab1e7f90950c0b81, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0.002007842
@@ -7517,7 +7521,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &1893073535
 Transform:
   m_ObjectHideFlags: 0
@@ -7778,6 +7782,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: KnightEnemy
       objectReference: {fileID: 0}
+    - target: {fileID: 874056427204334232, guid: 1fdde161d8f6d4093b7b37387de4f55a, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 7209672215228280288, guid: 1fdde161d8f6d4093b7b37387de4f55a, type: 3}
       propertyPath: m_LocalPosition.x
       value: 3.1338906
@@ -7834,6 +7842,10 @@ PrefabInstance:
     - target: {fileID: 874056427204334232, guid: 1fdde161d8f6d4093b7b37387de4f55a, type: 3}
       propertyPath: m_Name
       value: KnightEnemy
+      objectReference: {fileID: 0}
+    - target: {fileID: 874056427204334232, guid: 1fdde161d8f6d4093b7b37387de4f55a, type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 6121499854008471477, guid: 1fdde161d8f6d4093b7b37387de4f55a, type: 3}
       propertyPath: initialHealth
@@ -8655,6 +8667,10 @@ PrefabInstance:
       propertyPath: checkpointSound
       value: 
       objectReference: {fileID: 8300000, guid: 21bd1306b699c4a2a8ad3539660b0a39, type: 3}
+    - target: {fileID: 3103036626017122537, guid: dcf5b5d8b838c4ca1819c6484f84baad, type: 3}
+      propertyPath: jumpBufferDuration
+      value: 0.2
+      objectReference: {fileID: 0}
     - target: {fileID: 3103036626017122537, guid: dcf5b5d8b838c4ca1819c6484f84baad, type: 3}
       propertyPath: wallJumpGravityMultiplier
       value: 2
