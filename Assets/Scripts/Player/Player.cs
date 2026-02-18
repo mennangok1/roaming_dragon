@@ -10,8 +10,8 @@ public class Player : MonoBehaviour
 
     [Header("Layers")]
     [SerializeField] private LayerMask groundLayer;
-
     [SerializeField] private LayerMask wallLayer;
+    [SerializeField] private LayerMask thinPlatformLayer;
 
     [Header ("Horizontal Movement")]
     [SerializeField] private float xSpeed = 6f;
@@ -194,8 +194,9 @@ public class Player : MonoBehaviour
     {
 
         RaycastHit2D raycastHitGround = Physics2D.BoxCast(collider.bounds.center, collider.bounds.size,0, Vector2.down, 0.1f, groundLayer);
+        RaycastHit2D raycastHitThinPlatform = Physics2D.BoxCast(collider.bounds.center, collider.bounds.size,0, Vector2.down, 0.1f, thinPlatformLayer);
 
-        return raycastHitGround.collider != null;
+        return raycastHitGround.collider != null || raycastHitThinPlatform.collider != null;
     }
     private bool IsCoyote()
     {
