@@ -25,6 +25,7 @@ public class Player : MonoBehaviour
     [SerializeField] private float wallJumpForceY = 10f;
     [SerializeField] private float wallJumpLockTime = 0.15f;
     [SerializeField] private float wallJumpGravityMultiplier = 5f;
+    [SerializeField] private float wallSlideGravityScale = 1f;
 
     [Header ("Ground Jump")]
     [SerializeField] private float defaultGravity = 5f;
@@ -54,9 +55,6 @@ public class Player : MonoBehaviour
     private float wallJumpLockCounter;
 
     private float wallJumpCooldown;
-
-    private bool onWall;
-
     private PlayerAttack attackScript;
 
     public bool isGrounded {get; private set;}
@@ -81,8 +79,6 @@ public class Player : MonoBehaviour
             animator.SetBool("isRunning", false);
             return;
         }
-        onWall = isOnWall();
-        
         horizontalInput = Input.GetAxisRaw("Horizontal");
 
         wallJumpLockCounter -= Time.deltaTime;
@@ -111,6 +107,7 @@ public class Player : MonoBehaviour
 
         if (IsGrounded())
         {
+            animator.SetBool("isOnWall", false);
             coyoteCountdown = coyoteTime;
         }
         else
@@ -148,8 +145,8 @@ public class Player : MonoBehaviour
         // Wall slide
         if (isOnWall() && !IsGrounded() && wallJumpLockCounter <= 0f)
         {
-            body.gravityScale = 0f;
-            body.linearVelocity = new Vector2(body.linearVelocity.x, -1f);
+            body.gravityScale = wallSlideGravityScale;
+            body.linearVelocity = new Vector2(body.linearVelocity.x, -wallSlideGravityScale);
         }
         else
         {
@@ -159,6 +156,7 @@ public class Player : MonoBehaviour
         animator.SetBool("isRunning", horizontalInput != 0);
         animator.SetBool("isGrounded", IsGrounded());
         animator.SetBool("isJumping", !IsGrounded() && !isOnWall());
+        animator.SetBool("isOnWall", isOnWall());
     }
 
 
