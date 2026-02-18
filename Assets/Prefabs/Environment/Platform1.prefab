@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 4386209590432295041}
   - component: {fileID: 7553408402089588533}
   - component: {fileID: 4685601741520049588}
+  - component: {fileID: 2435884803612058952}
   m_Layer: 8
   m_Name: Platform1
   m_TagString: Ground
@@ -137,3 +138,16 @@ BoxCollider2D:
   m_AutoTiling: 0
   m_Size: {x: 0.45943016, y: 0.008114807}
   m_EdgeRadius: 0
+--- !u!114 &2435884803612058952
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6801099139601601360}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cfc7870063b3f4d759aa8e45f0f0b353, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::ThinPlatform
+  player: {fileID: 0}

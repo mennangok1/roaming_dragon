@@ -2093,6 +2093,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 893866481}
     m_Modifications:
+    - target: {fileID: 2435884803612058952, guid: 688a2ff2061424ce69c728e33b52da52, type: 3}
+      propertyPath: player
+      value: 
+      objectReference: {fileID: 478426803}
     - target: {fileID: 4386209590432295041, guid: 688a2ff2061424ce69c728e33b52da52, type: 3}
       propertyPath: m_LocalPosition.x
       value: 16.12
@@ -3030,6 +3034,14 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 2435884803612058952, guid: 688a2ff2061424ce69c728e33b52da52, type: 3}
+      propertyPath: player
+      value: 
+      objectReference: {fileID: 478426803}
+    - target: {fileID: 2435884803612058952, guid: 688a2ff2061424ce69c728e33b52da52, type: 3}
+      propertyPath: inactiveDurationAfterJumpingFromPlatform
+      value: 0.2
+      objectReference: {fileID: 0}
     - target: {fileID: 4386209590432295041, guid: 688a2ff2061424ce69c728e33b52da52, type: 3}
       propertyPath: m_LocalScale.x
       value: 12.387101
@@ -5010,6 +5022,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 893866481}
     m_Modifications:
+    - target: {fileID: 2435884803612058952, guid: 688a2ff2061424ce69c728e33b52da52, type: 3}
+      propertyPath: player
+      value: 
+      objectReference: {fileID: 478426803}
     - target: {fileID: 4386209590432295041, guid: 688a2ff2061424ce69c728e33b52da52, type: 3}
       propertyPath: m_LocalPosition.x
       value: 13.289999
@@ -7991,6 +8007,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 893866481}
     m_Modifications:
+    - target: {fileID: 2435884803612058952, guid: 688a2ff2061424ce69c728e33b52da52, type: 3}
+      propertyPath: player
+      value: 
+      objectReference: {fileID: 478426803}
     - target: {fileID: 4386209590432295041, guid: 688a2ff2061424ce69c728e33b52da52, type: 3}
       propertyPath: m_LocalScale.x
       value: 10.906506
