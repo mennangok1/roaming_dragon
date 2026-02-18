@@ -6342,6 +6342,10 @@ PrefabInstance:
       propertyPath: m_Constraints
       value: 7
       objectReference: {fileID: 0}
+    - target: {fileID: 3541935327482417982, guid: 5abc954a568824aed9b9c781364a380a, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 4.068
+      objectReference: {fileID: 0}
     - target: {fileID: 8696381952410770613, guid: 5abc954a568824aed9b9c781364a380a, type: 3}
       propertyPath: m_Name
       value: SmallWall
@@ -8691,7 +8695,7 @@ PrefabInstance:
     - target: {fileID: 586624725877897227, guid: dcf5b5d8b838c4ca1819c6484f84baad, type: 3}
       propertyPath: m_Sprite
       value: 
-      objectReference: {fileID: -3337038689812066966, guid: 8981ada298011483bb49f4b06383b8b6, type: 3}
+      objectReference: {fileID: 21300000, guid: 20daa800a641d9e4cae18a06630db1ef, type: 3}
     - target: {fileID: 586624725877897227, guid: dcf5b5d8b838c4ca1819c6484f84baad, type: 3}
       propertyPath: m_DrawMode
       value: 0
@@ -8751,6 +8755,10 @@ PrefabInstance:
     - target: {fileID: 3103036626017122537, guid: dcf5b5d8b838c4ca1819c6484f84baad, type: 3}
       propertyPath: jumpBufferDuration
       value: 0.2
+      objectReference: {fileID: 0}
+    - target: {fileID: 3103036626017122537, guid: dcf5b5d8b838c4ca1819c6484f84baad, type: 3}
+      propertyPath: wallSlideGravityScale
+      value: 3
       objectReference: {fileID: 0}
     - target: {fileID: 3103036626017122537, guid: dcf5b5d8b838c4ca1819c6484f84baad, type: 3}
       propertyPath: cornerCorrectionDistance
