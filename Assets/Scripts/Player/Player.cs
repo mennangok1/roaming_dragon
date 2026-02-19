@@ -79,7 +79,7 @@ public class Player : MonoBehaviour
         animator = GetComponent<Animator>();
         collider = GetComponent<CapsuleCollider2D>();
         attackScript = GetComponent<PlayerAttack>();
-        GetComponent<PlayerRespawn>().SetInitialPoisition(transform.position);
+        GetComponent<PlayerRespawn>().SetInitialPosition(transform.position);
     }
     private void Update()
     {

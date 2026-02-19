@@ -41,20 +41,18 @@ public class EnemyHealth : Health
                 knightEnemy.ApplyProjectileRecoil(hitPoint);
             }
 
-            if (currentHealth <= feelDizzyIfHealthIsBelow && knightEnemy.GetCurrentState() != KnightEnemy.EnemyState.dizzy)
+            if (currentHealth <= feelDizzyIfHealthIsBelow && knightEnemy.GetCurrentState() != KnightEnemy.EnemyState.Dizzy)
             {
-                Debug.Log("Feel dizzy set current state");
                 StartCoroutine(knightEnemy.FeelDizzy());
             }
             StartCoroutine(base.Invincibility());
         }
         else
         {
-            if (!isDead)
+            if (knightEnemy.GetCurrentState() != KnightEnemy.EnemyState.Dead)
             {
                 knightEnemy.Stop();
-                knightEnemy.SetCurrentState(KnightEnemy.EnemyState.dead);
-                isDead = true;
+                knightEnemy.SetCurrentState(KnightEnemy.EnemyState.Dead);
                 animator.SetBool("isDead", true);
                 animator.SetBool("isFeelingDizzy", false);
             }

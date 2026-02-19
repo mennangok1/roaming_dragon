@@ -10,11 +10,12 @@ public class PlayerRespawn : MonoBehaviour
     private Vector3 initialPosition;
 
     private Health playerHealth;
-    
+    private CameraController cameraController;
 
     private void Awake() {
         playerHealth = GetComponent<Health>();
         uiManager = FindObjectOfType<UIManager>(); // use this when you are sure only one object of this type exists. Don't call this method repeatedly e.g. in Update()
+        cameraController = Camera.main.GetComponent<CameraController>();
     }
 
     public void CheckRespawn()
@@ -29,6 +30,7 @@ public class PlayerRespawn : MonoBehaviour
         {
             transform.position = initialPosition;
             playerHealth.Respawn();
+            cameraController.MoveToPosition(initialPosition);
             return;
         }
         //Move the player to last checkpoint
@@ -38,7 +40,7 @@ public class PlayerRespawn : MonoBehaviour
         playerHealth.Respawn();
 
         //Move the camera to the room where lastCheckpoint is located (transform.parent directs to the room if we set the checkpoint object as the child of the room it belongs to)
-        Camera.main.GetComponent<CameraController>().MoveToNewRoom(lastCheckpoint.parent);
+        cameraController.MoveToNewRoom(lastCheckpoint.parent);
     }
 
     private void OnTriggerEnter2D(Collider2D other) {
@@ -51,7 +53,7 @@ public class PlayerRespawn : MonoBehaviour
         }
     }
 
-    public void SetInitialPoisition(Vector3 _initialPosition)
+    public void SetInitialPosition(Vector3 _initialPosition)
     {
         initialPosition = _initialPosition;
     }

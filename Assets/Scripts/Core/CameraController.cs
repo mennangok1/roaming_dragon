@@ -15,4 +15,9 @@ public class CameraController : MonoBehaviour
     {
         currentPosX = _newRoom.position.x;
     }
+
+    public void MoveToPosition(Vector3 position)
+    {
+        currentPosX = position.x;
+    }
 }
