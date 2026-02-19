@@ -32,6 +32,8 @@ public class Health : MonoBehaviour
 
     private bool isInvincible;
 
+    private Player player;
+
 
     protected void Awake() {
         currentHealth = initialHealth;
@@ -40,12 +42,12 @@ public class Health : MonoBehaviour
         spriteRenderer = GetComponent<SpriteRenderer>();
         blinkWaitSeconds = invincibleDuration / (2 * numOfFlashes);
         body = GetComponent<Rigidbody2D>();
-        isDead = false;
+        player = GetComponent<Player>();
     }
 
     public void TakeDamage(float _damage)
     {
-        if (isInvincible) return;
+        if (player.currentPowerUpState == Player.PlayerPowerUpState.Invincible) return;
         currentHealth = Mathf.Clamp(currentHealth - _damage, 0, initialHealth);
 
         if (currentHealth > 0)
@@ -55,11 +57,11 @@ public class Health : MonoBehaviour
         }
         else
         {
-            if (!isDead)
+            if (player.currentMovementState != Player.PlayerMovementState.Dead)
             {
                 SoundManager.instance.PlaySound(dieSound);
                 animator.SetBool("isDead", true);
-                isDead = true;
+                player.ChangeMovementState(Player.PlayerMovementState.Dead);
                 currentGlobalHealth -= 1;
             }
         }
@@ -76,22 +78,15 @@ public class Health : MonoBehaviour
         currentGlobalHealth += gain;
     }
 
-    private void Update() {
-        if (Input.GetKeyDown(KeyCode.E))
-        {
-            TakeDamage(1);
-        }
-    }
-
     public bool isHealthFull()
     {
         return currentHealth == initialHealth;
     }
+
     public bool IsDead()
     {
-        return isDead;
+        return player.currentMovementState == Player.PlayerMovementState.Dead;
     }
-
     private void DisableRigidbody()
     {
         body.simulated = false;
@@ -105,7 +100,7 @@ public class Health : MonoBehaviour
     protected IEnumerator Invincibility()
 
     {
-        isInvincible = true;
+        player.ChangePowerUpState(Player.PlayerPowerUpState.Invincible);
 
         for (int i = 0; i < numOfFlashes; i++)
         {
@@ -119,7 +114,7 @@ public class Health : MonoBehaviour
             yield return new WaitForSeconds(blinkWaitSeconds);
         }
 
-        isInvincible = false;
+        player.ChangePowerUpState(Player.PlayerPowerUpState.Normal);
         isAtCheckpoint = false;
     }
 
@@ -127,7 +122,7 @@ public class Health : MonoBehaviour
     {
         GainHealth(initialHealth);
         animator.SetBool("isDead", false);
-        isDead = false;
+        player.DetermineMovementStateAfterRecoilAndRespawn();
         animator.Play("Idle");
         isAtCheckpoint = true;
         StartCoroutine(Invincibility());

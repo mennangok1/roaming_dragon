@@ -19,13 +19,15 @@ public class PlayerAttack : MonoBehaviour
 
 
     [Header ("Recoil")]
-    public bool isRecoiling = false;
 
     [SerializeField] private float recoilDuration = 0.12f;
     [SerializeField] private float recoilKickSpeed = 6f;
     [SerializeField] private float groundRecoilDamping = 80f;
     [SerializeField] private float airRecoilDamping = 25f;
     private Coroutine recoilRoutine;
+
+    public enum PlayerActionState {None, Attacking}
+    public PlayerActionState currentActionState {get; private set;} = PlayerActionState.None;
 
     private void Awake() {
         animator = GetComponent<Animator>();
@@ -34,7 +36,7 @@ public class PlayerAttack : MonoBehaviour
     }
 
     private void Update() {
-        if (Input.GetKeyDown(KeyCode.Q) && cooldownTimer > attackCooldown && player.canAttack())
+        if (Input.GetKeyDown(KeyCode.Q) && cooldownTimer > attackCooldown && CanAttack())
         {
             Attack();
         }
@@ -65,7 +67,7 @@ public class PlayerAttack : MonoBehaviour
 
     IEnumerator RecoilRoutine()
     {
-        isRecoiling = true;
+        player.ChangeMovementState(Player.PlayerMovementState.Stunned);
         float recoilDirectionX = -Mathf.Sign(transform.localScale.x);
         if (recoilDirectionX == 0f)
         {
@@ -78,15 +80,15 @@ public class PlayerAttack : MonoBehaviour
         float elapsed = 0f;
         while (elapsed < recoilDuration)
         {
-            float damping = player.isGrounded ? groundRecoilDamping : airRecoilDamping;
+            float damping = player.currentLocationState == Player.PlayerLocationState.OnGround ? groundRecoilDamping : airRecoilDamping;
             float newVelocityX = Mathf.MoveTowards(body.linearVelocity.x, 0f, damping * Time.fixedDeltaTime);
             body.linearVelocity = new Vector2(newVelocityX, body.linearVelocity.y);
 
             elapsed += Time.fixedDeltaTime;
             yield return new WaitForFixedUpdate();
         }
-
-        isRecoiling = false;
+        
+        player.DetermineMovementStateAfterRecoilAndRespawn();
         recoilRoutine = null;
     }
 
@@ -102,5 +104,11 @@ public class PlayerAttack : MonoBehaviour
             }
         }
         return 0;
+    }
+
+
+    public bool CanAttack()
+    {
+        return player.currentLocationState != Player.PlayerLocationState.OnWall;
     }
 }

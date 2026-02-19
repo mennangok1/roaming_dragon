@@ -58,12 +58,21 @@ public class Player : MonoBehaviour
 
     private float wallJumpCooldown;
     private PlayerAttack attackScript;
-    public bool isGrounded {get; private set;}
-    private bool isRunning;
 
     private int jumpBufferCheckInterval = 20;
     private Coroutine jumpBufferRoutine;
     private float cornerCorrectionCooldownCounter;
+
+    public enum PlayerMovementState {Idle, Running, Stunned, Dead}
+
+    public enum PlayerPowerUpState {Normal, Invincible}
+    public enum PlayerLocationState {OnAir, OnGround, OnWall}
+
+    public PlayerMovementState currentMovementState {get; private set;} = PlayerMovementState.Idle;
+    
+    public PlayerPowerUpState currentPowerUpState {get; private set;} = PlayerPowerUpState.Normal;
+    public PlayerLocationState currentLocationState {get; private set;} = PlayerLocationState.OnGround;
+
     private void Awake()
     {
         body = GetComponent<Rigidbody2D>();
@@ -74,97 +83,93 @@ public class Player : MonoBehaviour
     }
     private void Update()
     {
-        isGrounded = IsGrounded();
+        //isGrounded = IsGrounded();
         horizontalInput = Input.GetAxisRaw("Horizontal");
-        isRunning = horizontalInput != 0;
 
+        //isRunning = horizontalInput != 0;
+        DetermineMovementState();
+        DetermineLocationState();
         HandleDustParticles();
-        if (attackScript.isRecoiling)   
-        {
-            animator.SetBool("isJumping", false);
-            animator.SetBool("isRunning", false);
-            return;
-        }
 
-        wallJumpLockCounter -= Time.deltaTime;
-        cornerCorrectionCooldownCounter -= Time.deltaTime;
-
-        // Apply horizontal movement ONLY if not locked by wall jump
-        if (wallJumpLockCounter <= 0f)
-        {
-            float targetSpeed = horizontalInput * xSpeed;
-            float currentSpeed = body.linearVelocity.x;
-            bool hasInput = Mathf.Abs(horizontalInput) > 0.01f;
-            float accelRate = hasInput
-                ? (isGrounded ? groundAcceleration : airAcceleration)
-                : (isGrounded ? groundDeceleration : airDeceleration);
-
-            float newSpeed = Mathf.MoveTowards(
-                currentSpeed,
-                targetSpeed,
-                accelRate * Time.deltaTime
-            );
-
-            body.linearVelocity = new Vector2(newSpeed, body.linearVelocity.y);
-
-            Flip(horizontalInput);
-        }
-
-        if (IsGrounded())
-        {
-            animator.SetBool("isOnWall", false);
-            coyoteCountdown = coyoteTime;
-        }
-        else
-        {
-            coyoteCountdown -= Time.deltaTime;
-        }
-
-        if (Input.GetKeyDown(KeyCode.Space))
-        {
-            if (IsCoyote())
+       //if (attackScript.isRecoiling)  
+        if (currentMovementState == PlayerMovementState.Stunned)
             {
-                // if grounded or in coyote, apply ground jump
-                CancelJumpBuffer();
-                GroundJump();
+                HandleStun();
             }
-            else if (isOnWall() && !IsGrounded())
-            {
-                CancelJumpBuffer();
-                WallJump();
-            }
-            else if (jumpBufferRoutine == null)
-            {
-                // if pressed jump but not grounded or on wall, wait for some duration and check if the player touches the ground to give the player some room for jumping
-                jumpBufferRoutine = StartCoroutine(JumpBufferRoutine());
-            }
-        }
+        HandlePerFrameCounters();
+        HandleHorizontalMovement();
 
-        if (Input.GetKeyUp(KeyCode.Space) && body.linearVelocity.y > 0)
-        {
-            body.linearVelocity = new Vector2(body.linearVelocity.x, body.linearVelocity.y / 2);
-        }
+        HandleJump();
 
         TryCornerCorrection();
 
-        // Wall slide
-        if (isOnWall() && !IsGrounded() && wallJumpLockCounter <= 0f)
+        WallSlide();
+
+        UpdateAnimator();
+    }
+
+    private void UpdateAnimator()
+    {
+        animator.SetBool("isRunning", currentMovementState == PlayerMovementState.Running);
+        animator.SetBool("isGrounded", currentLocationState == PlayerLocationState.OnGround);
+        animator.SetBool("isJumping", currentLocationState == PlayerLocationState.OnAir);
+        animator.SetBool("isOnWall", currentLocationState == PlayerLocationState.OnWall);
+    }
+    private void DetermineMovementState()
+    {
+        if (currentMovementState == PlayerMovementState.Dead || currentMovementState == PlayerMovementState.Stunned)
         {
-            body.gravityScale = wallSlideGravityScale;
-            body.linearVelocity = new Vector2(body.linearVelocity.x, -wallSlideGravityScale);
+            return;
+        }
+
+        if (horizontalInput != 0)
+        {
+            ChangeMovementState(PlayerMovementState.Running);
         }
         else
         {
-            ApplyVerticalGravity();
+            ChangeMovementState(PlayerMovementState.Idle);
         }
-
-        animator.SetBool("isRunning", horizontalInput != 0);
-        animator.SetBool("isGrounded", IsGrounded());
-        animator.SetBool("isJumping", !IsGrounded() && !isOnWall());
-        animator.SetBool("isOnWall", isOnWall());
     }
 
+    public void DetermineMovementStateAfterRecoilAndRespawn()
+    {
+        if (horizontalInput != 0)
+        {
+            ChangeMovementState(PlayerMovementState.Running);
+        }
+        else
+        {
+            ChangeMovementState(PlayerMovementState.Idle);
+        }
+    }
 
+    private void DetermineLocationState()
+    {
+        if (IsGrounded())
+        {
+            currentLocationState = PlayerLocationState.OnGround;
+        }
+        else if (IsOnWall())
+        {
+            currentLocationState = PlayerLocationState.OnWall;
+        }
+        else
+        {
+            currentLocationState = PlayerLocationState.OnAir;
+        }
+
+    }
+
+    public void ChangeMovementState(PlayerMovementState newState)
+    {
+        currentMovementState = newState;
+    }
+        
+    public void ChangePowerUpState(PlayerPowerUpState newState)
+    {
+        currentPowerUpState = newState;
+    }
     private void GroundJump()
     {
 
@@ -176,7 +181,7 @@ public class Player : MonoBehaviour
 
     private void HandleDustParticles()
     {
-        if (isGrounded && isRunning)
+        if (currentLocationState == PlayerLocationState.OnGround && currentMovementState == PlayerMovementState.Running)
         {
             // particles must be in the opposite of the input direction
             walkParticles.transform.rotation = horizontalInput < 0
@@ -198,6 +203,83 @@ public class Player : MonoBehaviour
             
         }
     }
+
+    private void HandleHorizontalMovement()
+    {
+        // Apply horizontal movement ONLY if not locked by wall jump
+        if (wallJumpLockCounter <= 0f)
+        {
+            float targetSpeed = horizontalInput * xSpeed;
+            float currentSpeed = body.linearVelocity.x;
+            bool hasInput = Mathf.Abs(horizontalInput) > 0.01f;
+            float accelRate = hasInput
+                ? (currentLocationState == PlayerLocationState.OnGround ? groundAcceleration : airAcceleration)
+                : (currentLocationState == PlayerLocationState.OnGround ? groundDeceleration : airDeceleration);
+
+            float newSpeed = Mathf.MoveTowards(
+                currentSpeed,
+                targetSpeed,
+                accelRate * Time.deltaTime
+            );
+
+            body.linearVelocity = new Vector2(newSpeed, body.linearVelocity.y);
+
+            Flip(horizontalInput);
+        }
+    }
+    private void HandlePerFrameCounters()
+    {
+        wallJumpLockCounter -= Time.deltaTime;
+        cornerCorrectionCooldownCounter -= Time.deltaTime;
+
+        if (currentLocationState == PlayerLocationState.OnGround)
+            {
+                //animator.SetBool("isOnWall", false);
+                coyoteCountdown = coyoteTime;
+            }
+        else
+            {
+                coyoteCountdown -= Time.deltaTime;
+            }
+    }
+
+
+    private void HandleStun()
+    {
+        animator.SetBool("isJumping", false);
+        animator.SetBool("isRunning", false);
+    }
+
+
+    private void HandleJump()
+    {
+        // coyote timer logic was here before 19.02
+
+        if (Input.GetKeyDown(KeyCode.Space))
+        {
+            if (IsCoyote())
+            {
+                // if grounded or in coyote, apply ground jump
+                CancelJumpBuffer();
+                GroundJump();
+            }
+            else if (currentLocationState == PlayerLocationState.OnWall && currentLocationState != PlayerLocationState.OnGround)
+            {
+                CancelJumpBuffer();
+                WallJump();
+            }
+            else if (jumpBufferRoutine == null)
+            {
+                // if pressed jump but not grounded or on wall, wait for some duration and check if the player touches the ground to give the player some room for jumping
+                jumpBufferRoutine = StartCoroutine(JumpBufferRoutine());
+            }
+        }
+
+        if (Input.GetKeyUp(KeyCode.Space) && body.linearVelocity.y > 0)
+        {
+            body.linearVelocity = new Vector2(body.linearVelocity.x, body.linearVelocity.y / 2);
+        }
+    }
     private void WallJump()
     {
         SoundManager.instance.PlaySound(jumpSound);
@@ -216,8 +298,23 @@ public class Player : MonoBehaviour
         Flip(-wallDir);
     }
 
+    private void WallSlide()
+    {
+        // Wall slide
+        if (currentLocationState == PlayerLocationState.OnWall && currentLocationState != PlayerLocationState.OnGround && wallJumpLockCounter <= 0f)
+        {
+            body.gravityScale = wallSlideGravityScale;
+            body.linearVelocity = new Vector2(body.linearVelocity.x, -wallSlideGravityScale);
+        }
+        else
+        {
+            ApplyVerticalGravity();
+        }
+    }
+
     private void OnCollisionEnter2D(Collision2D collision)
     {
+
     }
 
     private bool IsGrounded()
@@ -232,7 +329,7 @@ public class Player : MonoBehaviour
     {
         return coyoteCountdown > 0;
     }
-    private bool isOnWall()
+    private bool IsOnWall()
     {
         RaycastHit2D raycastHitWall = Physics2D.BoxCast(collider.bounds.center, collider.bounds.size, 0, new Vector2(transform.localScale.x, 0), 0.1f, wallLayer);
 
@@ -352,12 +449,6 @@ public class Player : MonoBehaviour
         );
     }
 
-
-
-    public bool canAttack()
-    {
-        return !isOnWall();
-    }
 
     private void CancelJumpBuffer()
     {
