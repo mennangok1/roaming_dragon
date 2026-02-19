@@ -204,7 +204,7 @@ Rigidbody2D:
   m_UseAutoMass: 0
   m_Mass: 1
   m_LinearDamping: 0
-  m_AngularDamping: 0.05
+  m_AngularDamping: 1
   m_GravityScale: 1
   m_Material: {fileID: 0}
   m_IncludeLayers:
@@ -253,7 +253,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::KnightEnemy
   damage: 1
   speed: 3
-  patrolDistance: 5
+  patrolDistance: 2
   patrolWalkDuration: 3
   patrolBreakDuration: 2
   playerLayer:
@@ -266,8 +266,8 @@ MonoBehaviour:
   dizzySound: {fileID: 8300000, guid: 04ba79bac302d4aa8813b159378c8038, type: 3}
   impactSound: {fileID: 8300000, guid: e288317433bd14240a6c0fb079ce0f36, type: 3}
   dizzyDuration: 3
-  projectileRecoilForce: 5
-  projectileRecoilDuration: 1.15
+  projectileRecoilForce: 2
+  projectileRecoilDuration: 1
 --- !u!61 &8474612413635203020
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -326,7 +326,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6dec004df370c42edbcc0c23a38d8b18, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::EnemyHealth
-  initialHealth: 2
+  initialHealth: 3
   initialGlobalHealth: 0
   currentHealth: 0
   currentGlobalHealth: 0
@@ -336,6 +336,8 @@ MonoBehaviour:
   invincibleDuration: 1
   numOfFlashes: 4
   feelDizzyIfHealthIsBelow: 1
+  damageParticles: {fileID: 8347446269625497116, guid: 3b519e3cf99154c17ac3222610535d6c, type: 3}
+  particleOffsetX: 2
 --- !u!1 &6686812143986845069
 GameObject:
   m_ObjectHideFlags: 0

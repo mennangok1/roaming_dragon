@@ -49,6 +49,8 @@ public class Player : MonoBehaviour
     [SerializeField] private float cornerPostCorrectionClearance = 0.2f;
     [SerializeField] private float cornerCorrectionCooldown = 0.06f;
 
+
+    [SerializeField] private ParticleSystem walkParticles;
     private float coyoteCountdown;
     private float horizontalInput;
 
@@ -57,6 +59,7 @@ public class Player : MonoBehaviour
     private float wallJumpCooldown;
     private PlayerAttack attackScript;
     public bool isGrounded {get; private set;}
+    private bool isRunning;
 
     private int jumpBufferCheckInterval = 20;
     private Coroutine jumpBufferRoutine;
@@ -72,13 +75,16 @@ public class Player : MonoBehaviour
     private void Update()
     {
         isGrounded = IsGrounded();
+        horizontalInput = Input.GetAxisRaw("Horizontal");
+        isRunning = horizontalInput != 0;
+
+        HandleDustParticles();
         if (attackScript.isRecoiling)   
         {
             animator.SetBool("isJumping", false);
             animator.SetBool("isRunning", false);
             return;
         }
-        horizontalInput = Input.GetAxisRaw("Horizontal");
 
         wallJumpLockCounter -= Time.deltaTime;
         cornerCorrectionCooldownCounter -= Time.deltaTime;
@@ -168,6 +174,30 @@ public class Player : MonoBehaviour
         coyoteCountdown = 0;
     }
 
+    private void HandleDustParticles()
+    {
+        if (isGrounded && isRunning)
+        {
+            // particles must be in the opposite of the input direction
+            walkParticles.transform.rotation = horizontalInput < 0
+                ? Quaternion.Euler(0, 180, 0)
+                : Quaternion.identity;
+
+            if (!walkParticles.isPlaying)
+            {
+                walkParticles.Play();
+            }
+        }
+        else
+        {
+            if (walkParticles.isPlaying)
+            {
+                walkParticles.Stop();
+            }
+
+            
+        }
+    }
     private void WallJump()
     {
         SoundManager.instance.PlaySound(jumpSound);
