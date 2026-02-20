@@ -12,7 +12,11 @@ public class KnightEnvironmentCollision : MonoBehaviour {
         {
             isColliding = true;
         }
-        else
+    }
+
+    private void OnTriggerExit2D(Collider2D other)
+    {
+        if (other != null && other.tag != "Player" && other.tag != "Projectile")
         {
             isColliding = false;
         }
@@ -23,4 +27,3 @@ public class KnightEnvironmentCollision : MonoBehaviour {
         isColliding = false;
     }
 }
-

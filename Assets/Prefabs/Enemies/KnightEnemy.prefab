@@ -347,7 +347,8 @@ MonoBehaviour:
   speed: 3
   chaseSpeed: 5
   chaseDuration: 2
-  patrolDistance: 2
+  blockedChaseCooldown: 0.35
+  patrolDistance: 2.5
   patrolWalkDuration: 3
   patrolBreakDuration: 2
   playerLayer:
@@ -424,7 +425,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::KnightEnemyVision
   detectionMask:
     serializedVersion: 2
-    m_Bits: 17303
+    m_Bits: 25495
   visionDistance: 5
   viewAngle: 90
 --- !u!114 &6121499854008471477

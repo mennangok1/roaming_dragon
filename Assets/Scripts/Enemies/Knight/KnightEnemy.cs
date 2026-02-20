@@ -7,6 +7,7 @@ public class KnightEnemy : MonoBehaviour {
     [SerializeField] private float speed;
     [SerializeField] private float chaseSpeed;
     [SerializeField] private float chaseDuration;
+    [SerializeField] private float blockedChaseCooldown = 0.35f;
     [SerializeField] private float patrolDistance;
 
     [SerializeField] private float patrolWalkDuration;
@@ -45,6 +46,9 @@ public class KnightEnemy : MonoBehaviour {
     [SerializeField] private float projectileRecoilDuration = 0.2f;
     private Coroutine recoilRoutine;
     private Coroutine chaseRoutine;
+    private bool wasCollidingWithEnvironment;
+    private float chaseBlockedUntilTime;
+    private bool isChaseBlockedByEnvironment;
 
     protected void Awake() {
         // set patrol center, get rigidbody, animator, and collider components
@@ -88,13 +92,14 @@ public class KnightEnemy : MonoBehaviour {
             }
 
         }
-        if(IsCollidingWithEnvironment())
+        bool isCollidingWithEnvironment = IsCollidingWithEnvironment();
+        if (isCollidingWithEnvironment && !wasCollidingWithEnvironment)
         {
             if (currentState == EnemyState.Chasing)
             {
-                Flip();
-                ResetAfterCollisionWithEnvironmentFlip();
-                StopChaseAndResumePatrol();
+                isChaseBlockedByEnvironment = true;
+                Stop();
+                animator.SetBool("isWalking", false);
             }
             else if (currentState == EnemyState.Walking)
             {
@@ -102,6 +107,7 @@ public class KnightEnemy : MonoBehaviour {
                 ResetAfterCollisionWithEnvironmentFlip();
             }
         }
+        wasCollidingWithEnvironment = isCollidingWithEnvironment;
     }
     private void OnCollisionEnter2D(Collision2D collision)
     {
@@ -260,6 +266,11 @@ public class KnightEnemy : MonoBehaviour {
 
     public void StartChase()
     {
+        if (Time.time < chaseBlockedUntilTime)
+        {
+            return;
+        }
+
         if (currentState == EnemyState.Dead || currentState == EnemyState.Dizzy || currentState == EnemyState.Recoiling)
         {
             return;
@@ -277,19 +288,34 @@ public class KnightEnemy : MonoBehaviour {
         }
 
         currentState = EnemyState.Chasing;
+        isChaseBlockedByEnvironment = false;
         renderer.enabled = true;
         SoundManager.instance.PlaySound(detectSound, detectSoundVolume);
         animator.SetBool("isWalking", true);
         animator.SetBool("isAttacking", false);
     }
 
-    public void StopChaseAndResumePatrol()
+    public void StopChaseAndResumePatrol(bool blockedByEnvironment = false)
     {
         if (currentState != EnemyState.Chasing)
         {
             return;
         }
 
+        bool shouldResolveBlockedCollision = isChaseBlockedByEnvironment;
+        if (blockedByEnvironment || shouldResolveBlockedCollision)
+        {
+            chaseBlockedUntilTime = Time.time + blockedChaseCooldown;
+        }
+
+        if (shouldResolveBlockedCollision)
+        {
+            Flip();
+            ResetAfterCollisionWithEnvironmentFlip();
+            wasCollidingWithEnvironment = false;
+        }
+
+        isChaseBlockedByEnvironment = false;
         renderer.enabled = false;
         if (chaseRoutine != null)
         {
@@ -384,7 +410,8 @@ public class KnightEnemy : MonoBehaviour {
             StopCoroutine(patrolRoutine);
             patrolRoutine = null;
         }
-        while (currentState == EnemyState.Chasing)
+        float countdown = 0f;
+        while (countdown < chaseDuration && currentState == EnemyState.Chasing)
         {
             if (player == null)
             {
@@ -392,21 +419,33 @@ public class KnightEnemy : MonoBehaviour {
                 yield break;
             }
 
-            if (IsFacingRight() && IsPlayerToTheRight())
+            if (isChaseBlockedByEnvironment)
             {
+                Stop();
+                animator.SetBool("isWalking", false);
+            }
+            else if (IsFacingRight() && IsPlayerToTheRight())
+            {
+                animator.SetBool("isWalking", true);
                 body.linearVelocity = new Vector2( chaseSpeed, body.linearVelocity.y);
             }   
             else if (!IsFacingRight() && !IsPlayerToTheRight())
             {
+                animator.SetBool("isWalking", true);
                 body.linearVelocity = new Vector2( -chaseSpeed, body.linearVelocity.y);
             } 
             else
             {
                 Flip();
             }
+            countdown += Time.deltaTime;
             yield return null;
         }
 
+        if (currentState == EnemyState.Chasing)
+        {
+            StopChaseAndResumePatrol(isChaseBlockedByEnvironment);
+        }
         chaseRoutine = null;
         
     }
