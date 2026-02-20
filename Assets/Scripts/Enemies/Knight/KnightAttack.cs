@@ -11,7 +11,6 @@ public class KnightAttack: MonoBehaviour
     [SerializeField] private LayerMask playerLayer;
     public GameObject player {get; private set;}
 
-    private bool isAttacking;
     public bool isPlayerInRange {get; private set;}
     private KnightEnemy enemy;
 
@@ -23,10 +22,6 @@ public class KnightAttack: MonoBehaviour
     private void Update() {
         isPlayerInRange = collider.IsTouchingLayers(playerLayer);
         attackCooldown += Time.deltaTime;
-        if (isPlayerInRange)
-        {
-            Debug.Log("player is in range");
-        }
     }
 
     private void TryAttack(Collider2D other) {
@@ -40,7 +35,7 @@ public class KnightAttack: MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D other)
     {
-        if (enemy.GetCurrentState() == KnightEnemy.EnemyState.dead) return;
+        if (enemy.GetCurrentState() == KnightEnemy.EnemyState.Dead) return;
         if (other.gameObject.layer == LayerMask.NameToLayer("PlayerHitbox"))
         {
             TryAttack(other);
@@ -49,7 +44,7 @@ public class KnightAttack: MonoBehaviour
 
     private void OnTriggerStay2D(Collider2D other)
     {
-        if (enemy.GetCurrentState() == KnightEnemy.EnemyState.dead) return;
+        if (enemy.GetCurrentState() == KnightEnemy.EnemyState.Dead) return;
         if (other.gameObject.layer == LayerMask.NameToLayer("PlayerHitbox"))
         {
             TryAttack(other);
