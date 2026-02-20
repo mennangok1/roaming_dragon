@@ -1,13 +1,11 @@
 using UnityEngine;
 using System.Collections;
 
-public class Health : MonoBehaviour
+public class Health : HealthBase
 {
 
     [Header ("Health Parameters")]
-    [SerializeField] protected float initialHealth;
     [SerializeField] protected float initialGlobalHealth;
-    [SerializeField] protected float currentHealth;
     [SerializeField] protected float currentGlobalHealth;
 
 
@@ -16,7 +14,6 @@ public class Health : MonoBehaviour
     [SerializeField] private AudioClip collectHeartSound;
     [SerializeField] private AudioClip bipSound;
 
-    protected bool isDead;
     private bool isAtCheckpoint;
 
     protected Animator animator;
@@ -36,7 +33,8 @@ public class Health : MonoBehaviour
 
 
     protected void Awake() {
-        currentHealth = initialHealth;
+        base.Awake();
+
         currentGlobalHealth = initialGlobalHealth;
         animator = GetComponent<Animator>();
         spriteRenderer = GetComponent<SpriteRenderer>();
@@ -45,7 +43,7 @@ public class Health : MonoBehaviour
         player = GetComponent<Player>();
     }
 
-    public void TakeDamage(float _damage)
+    public override void TakeDamage(float _damage)
     {
         if (player.currentPowerUpState == Player.PlayerPowerUpState.Invincible) return;
         currentHealth = Mathf.Clamp(currentHealth - _damage, 0, initialHealth);
@@ -67,36 +65,17 @@ public class Health : MonoBehaviour
         }
     }
 
-    public void GainHealth( float gain )
+    public override void GainHealth( float gain )
     {
+        base.GainHealth(gain);
         SoundManager.instance.PlaySound(collectHeartSound);
-        currentHealth = Mathf.Clamp(currentHealth + gain, 0, initialHealth);
+        
     }
     public void GainGlobalHealth( float gain )
     {
         SoundManager.instance.PlaySound(collectHeartSound);
         currentGlobalHealth += gain;
     }
-
-    public bool isHealthFull()
-    {
-        return currentHealth == initialHealth;
-    }
-
-    public bool IsDead()
-    {
-        return player.currentMovementState == Player.PlayerMovementState.Dead;
-    }
-    private void DisableRigidbody()
-    {
-        body.simulated = false;
-    }
-
-    private void EnableRigidbody()
-    {
-        body.simulated = true;
-    }
-
     protected IEnumerator Invincibility()
 
     {
@@ -128,15 +107,21 @@ public class Health : MonoBehaviour
         StartCoroutine(Invincibility());
         EnableRigidbody();
     }
-
-    public float GetCurrentHealth()
-    {
-        return currentHealth;
-    }
     public float GetCurrentGlobalHealth()
     {
         return currentGlobalHealth;
     }
+
+    private void DisableRigidbody()
+    {
+        body.simulated = false;
+    }
+
+    private void EnableRigidbody()
+    {
+        body.simulated = true;
+    }
+
 
 
 }

@@ -50,10 +50,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::EnemyDamage
   damage: 1
-  impactSound: {fileID: 0}
+  impactSound: {fileID: 8300000, guid: e288317433bd14240a6c0fb079ce0f36, type: 3}
   PlayerHitboxLayer:
     serializedVersion: 2
-    m_Bits: 0
+    m_Bits: 8192
 --- !u!61 &5343641789189181085
 BoxCollider2D:
   m_ObjectHideFlags: 0

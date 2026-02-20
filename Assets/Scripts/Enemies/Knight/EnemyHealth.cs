@@ -1,6 +1,6 @@
 using UnityEngine;
 using System.Collections;
-public class EnemyHealth : Health
+public class EnemyHealth : HealthBase
 {
     [SerializeField] private float feelDizzyIfHealthIsBelow;
     [SerializeField] private ParticleSystem damageParticles;
@@ -10,12 +10,14 @@ public class EnemyHealth : Health
     private SpriteRenderer renderer;
 
     private KnightEnemy knightEnemy;
+    private Animator animator;
 
     protected void Awake() {
         base.Awake();
         feelDizzyIfHealthIsBelow = 1;
         knightEnemy = GetComponent<KnightEnemy>();
         renderer = GetComponent<SpriteRenderer>();
+        animator = GetComponent<Animator>();
     }
 
     public void TakeDamage(float _damage)
@@ -45,7 +47,7 @@ public class EnemyHealth : Health
             {
                 StartCoroutine(knightEnemy.FeelDizzy());
             }
-            StartCoroutine(base.Invincibility());
+            //StartCoroutine(base.Invincibility());
         }
         else
         {

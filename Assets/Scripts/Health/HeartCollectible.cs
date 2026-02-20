@@ -12,7 +12,7 @@ public class HealthCollectible : MonoBehaviour
     private void OnTriggerEnter2D(Collider2D trigger) {
         if (trigger.tag == "Player")
         {
-            if (!isGlobalHealth && !trigger.GetComponentInParent<Health>().isHealthFull())
+            if (!isGlobalHealth && !trigger.GetComponentInParent<Health>().IsHealthFull())
             {
                 trigger.GetComponentInParent<Health>().GainHealth(heartGain);
                 gameObject.SetActive(false);
