@@ -72,6 +72,9 @@ public class Player : MonoBehaviour
     
     public PlayerPowerUpState currentPowerUpState {get; private set;} = PlayerPowerUpState.Normal;
     public PlayerLocationState currentLocationState {get; private set;} = PlayerLocationState.OnGround;
+
+
+    [SerializeField] private Transform currentRoom;
     private void Start() {
         GetComponent<PlayerRespawn>().SetInitialPosition(transform.position);
     }
@@ -478,6 +481,16 @@ public class Player : MonoBehaviour
         }
 
         jumpBufferRoutine = null;
+    }
+
+    public Transform GetCurrentRoom()
+    {
+        return currentRoom;
+    }
+
+    public void SetCurrentRoom(Transform room)
+    {
+        currentRoom = room;
     }
 
 }

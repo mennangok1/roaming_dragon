@@ -6,11 +6,13 @@ public class Door : MonoBehaviour
     [SerializeField] private Transform nextRoom;
     [SerializeField] private CameraController cam;
     [SerializeField] private GameObject player;
+    private Player playerScript;
     private Transform currentRoom;
     private Collider2D doorTrigger;
 
     private void Awake() {
         doorTrigger = GetComponent<Collider2D>();
+        playerScript = player.GetComponent<Player>();
     }
 
     private void Update() {
@@ -18,13 +20,19 @@ public class Door : MonoBehaviour
         {
             return;
         }
-
-        // Only auto-correct room state while the player is inside this doorway.
-        // This prevents distant doors from changing camera room after a respawn teleport.
-        if (!doorTrigger.OverlapPoint(player.transform.position))
+        if (playerScript.GetCurrentRoom() != previousRoom || playerScript.GetCurrentRoom() != nextRoom)
         {
             return;
         }
+
+
+
+        // Only auto-correct room state while the player is inside this doorway.
+        // This prevents distant doors from changing camera room after a respawn teleport.
+/*         if (!doorTrigger.OverlapPoint(player.transform.position))
+        {
+            return;
+        } */
 
         if (player.transform.position.x > transform.position.x && currentRoom == previousRoom)
         {
@@ -62,5 +70,6 @@ public class Door : MonoBehaviour
         toRoom.GetComponent<Room>().ActivateRoom(true);
         fromRoom.GetComponent<Room>().ActivateRoom(false);
         currentRoom = toRoom;
+        playerScript.SetCurrentRoom(toRoom);
     }
 }
