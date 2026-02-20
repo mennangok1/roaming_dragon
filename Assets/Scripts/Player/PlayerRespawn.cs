@@ -12,6 +12,8 @@ public class PlayerRespawn : MonoBehaviour
     private Health playerHealth;
     
 
+    [SerializeField] private Transform firstRoom;
+
     private void Awake() {
         playerHealth = GetComponent<Health>();
         uiManager = FindObjectOfType<UIManager>(); // use this when you are sure only one object of this type exists. Don't call this method repeatedly e.g. in Update()
@@ -29,6 +31,10 @@ public class PlayerRespawn : MonoBehaviour
         {
             transform.position = initialPosition;
             playerHealth.Respawn();
+<<<<<<< Updated upstream
+=======
+            cameraController.MoveToNewRoom(firstRoom);
+>>>>>>> Stashed changes
             return;
         }
         //Move the player to last checkpoint

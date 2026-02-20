@@ -64,13 +64,32 @@ public class Player : MonoBehaviour
     private int jumpBufferCheckInterval = 20;
     private Coroutine jumpBufferRoutine;
     private float cornerCorrectionCooldownCounter;
+<<<<<<< Updated upstream
+=======
+
+    public enum PlayerMovementState {Idle, Running, Stunned, Dead}
+
+    public enum PlayerPowerUpState {Normal, Invincible}
+    public enum PlayerLocationState {OnAir, OnGround, OnWall}
+
+    public PlayerMovementState currentMovementState {get; private set;} = PlayerMovementState.Idle;
+    
+    public PlayerPowerUpState currentPowerUpState {get; private set;} = PlayerPowerUpState.Normal;
+    public PlayerLocationState currentLocationState {get; private set;} = PlayerLocationState.OnGround;
+    private void Start() {
+        GetComponent<PlayerRespawn>().SetInitialPosition(transform.position);
+    }
+>>>>>>> Stashed changes
     private void Awake()
     {
         body = GetComponent<Rigidbody2D>();
         animator = GetComponent<Animator>();
         collider = GetComponent<CapsuleCollider2D>();
         attackScript = GetComponent<PlayerAttack>();
+<<<<<<< Updated upstream
         GetComponent<PlayerRespawn>().SetInitialPoisition(transform.position);
+=======
+>>>>>>> Stashed changes
     }
     private void Update()
     {

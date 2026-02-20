@@ -7,19 +7,34 @@ public class Door : MonoBehaviour
     [SerializeField] private CameraController cam;
     [SerializeField] private GameObject player;
     private Transform currentRoom;
+    private Collider2D doorTrigger;
+
+    private void Awake() {
+        doorTrigger = GetComponent<Collider2D>();
+    }
 
     private void Update() {
+        if (doorTrigger == null)
+        {
+            return;
+        }
+
+        // Only auto-correct room state while the player is inside this doorway.
+        // This prevents distant doors from changing camera room after a respawn teleport.
+        if (!doorTrigger.OverlapPoint(player.transform.position))
+        {
+            return;
+        }
+
         if (player.transform.position.x > transform.position.x && currentRoom == previousRoom)
         {
             // player is to the right of the door but the current room is set to the previous room, we must be in the next room
             TransitionRooms(currentRoom, nextRoom);
-            Debug.Log("in update if");
         }
         else if (player.transform.position.x < transform.position.x && currentRoom == nextRoom)
         {
             // player is to the left of the door but the current room is set to the next room, we must be in the previous room
             TransitionRooms(currentRoom, previousRoom);
-            Debug.Log("in update else if");
         }
     }
 
