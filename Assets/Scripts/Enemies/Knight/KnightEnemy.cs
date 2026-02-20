@@ -5,6 +5,8 @@ public class KnightEnemy : MonoBehaviour {
     [SerializeField] private float damage;
     private Vector3 destination;
     [SerializeField] private float speed;
+    [SerializeField] private float chaseSpeed;
+    [SerializeField] private float chaseDuration;
     [SerializeField] private float patrolDistance;
 
     [SerializeField] private float patrolWalkDuration;
@@ -14,6 +16,7 @@ public class KnightEnemy : MonoBehaviour {
     private Animator animator;
     private Rigidbody2D body;
     private BoxCollider2D collider;
+    private SpriteRenderer renderer;
 
     private float patrolCenterXPosition;
 
@@ -22,7 +25,7 @@ public class KnightEnemy : MonoBehaviour {
 
 
 
-    public enum EnemyState {Walking, Waiting, Dead, Dizzy, Recoiling, Attacking}
+    public enum EnemyState {Walking, Waiting, Dead, Dizzy, Recoiling, Attacking, Chasing}
     private EnemyState currentState;
 
     private KnightEnvironmentCollision environmentCollisionScript;
@@ -32,13 +35,16 @@ public class KnightEnemy : MonoBehaviour {
     [SerializeField] private AudioClip swordAttackSound;
     [SerializeField] private AudioClip dizzySound;
     [SerializeField] private AudioClip impactSound;
+    [SerializeField] private AudioClip detectSound;
+    [SerializeField] [Range(0,1)] private float detectSoundVolume;
 
-
+    private GameObject player;
 
     [SerializeField] private float dizzyDuration;
     [SerializeField] private float projectileRecoilForce = 5f;
     [SerializeField] private float projectileRecoilDuration = 0.2f;
     private Coroutine recoilRoutine;
+    private Coroutine chaseRoutine;
 
     protected void Awake() {
         // set patrol center, get rigidbody, animator, and collider components
@@ -46,6 +52,9 @@ public class KnightEnemy : MonoBehaviour {
         body = GetComponent<Rigidbody2D>();
         animator = GetComponent<Animator>();
         collider = GetComponent<BoxCollider2D>();
+        player = GameObject.FindGameObjectWithTag("Player");
+        renderer = transform.Find("DetectionFX").GetComponent<SpriteRenderer>();
+        renderer.enabled = false;
 
         // get the environment collision and attack scripts in the child objects
         environmentCollisionScript = transform.Find("KnightEnvironmentCollision")
@@ -56,6 +65,8 @@ public class KnightEnemy : MonoBehaviour {
                                 .GetComponent<KnightAttack>();
 
         patrolRoutine = StartCoroutine(Patrol());
+        
+
 
 
     }
@@ -69,10 +80,27 @@ public class KnightEnemy : MonoBehaviour {
         {
             Stop(); 
         }
+        else if (currentState == EnemyState.Chasing)
+        {
+            if (chaseRoutine == null)
+            {
+                chaseRoutine = StartCoroutine(ChaseRoutine());
+            }
+
+        }
         if(IsCollidingWithEnvironment())
         {
-            Flip();
-            ResetAfterCollisionWithEnvironmentFlip();
+            if (currentState == EnemyState.Chasing)
+            {
+                Flip();
+                ResetAfterCollisionWithEnvironmentFlip();
+                StopChaseAndResumePatrol();
+            }
+            else if (currentState == EnemyState.Walking)
+            {
+                Flip();
+                ResetAfterCollisionWithEnvironmentFlip();
+            }
         }
     }
     private void OnCollisionEnter2D(Collision2D collision)
@@ -189,6 +217,11 @@ public class KnightEnemy : MonoBehaviour {
             StopCoroutine(patrolRoutine);
             patrolRoutine = null;
         }
+        if (chaseRoutine != null)
+        {
+            StopCoroutine(chaseRoutine);
+            chaseRoutine = null;
+        }
         currentState = EnemyState.Attacking;
         animator.SetBool("isAttacking", true);
         animator.SetBool("isWalking", false);
@@ -223,6 +256,55 @@ public class KnightEnemy : MonoBehaviour {
     public void SetCurrentState(EnemyState state)
     {
         currentState = state;
+    }
+
+    public void StartChase()
+    {
+        if (currentState == EnemyState.Dead || currentState == EnemyState.Dizzy || currentState == EnemyState.Recoiling)
+        {
+            return;
+        }
+
+        if (currentState == EnemyState.Attacking || currentState == EnemyState.Chasing)
+        {
+            return;
+        }
+
+        if (patrolRoutine != null)
+        {
+            StopCoroutine(patrolRoutine);
+            patrolRoutine = null;
+        }
+
+        currentState = EnemyState.Chasing;
+        renderer.enabled = true;
+        SoundManager.instance.PlaySound(detectSound, detectSoundVolume);
+        animator.SetBool("isWalking", true);
+        animator.SetBool("isAttacking", false);
+    }
+
+    public void StopChaseAndResumePatrol()
+    {
+        if (currentState != EnemyState.Chasing)
+        {
+            return;
+        }
+
+        renderer.enabled = false;
+        if (chaseRoutine != null)
+        {
+            StopCoroutine(chaseRoutine);
+            chaseRoutine = null;
+        }
+
+        Stop();
+        currentState = EnemyState.Walking;
+        animator.SetBool("isWalking", true);
+
+        if (patrolRoutine == null)
+        {
+            patrolRoutine = StartCoroutine(Patrol());
+        }
     }
 
     public EnemyState GetCurrentState()
@@ -294,6 +376,49 @@ public class KnightEnemy : MonoBehaviour {
         patrolRoutine = StartCoroutine(Patrol());
         recoilRoutine = null;
     }
+
+    private IEnumerator ChaseRoutine()
+    {
+        if (patrolRoutine != null)
+        {
+            StopCoroutine(patrolRoutine);
+            patrolRoutine = null;
+        }
+        while (currentState == EnemyState.Chasing)
+        {
+            if (player == null)
+            {
+                StopChaseAndResumePatrol();
+                yield break;
+            }
+
+            if (IsFacingRight() && IsPlayerToTheRight())
+            {
+                body.linearVelocity = new Vector2( chaseSpeed, body.linearVelocity.y);
+            }   
+            else if (!IsFacingRight() && !IsPlayerToTheRight())
+            {
+                body.linearVelocity = new Vector2( -chaseSpeed, body.linearVelocity.y);
+            } 
+            else
+            {
+                Flip();
+            }
+            yield return null;
+        }
+
+        chaseRoutine = null;
+        
+    }
     
 
+    private bool IsPlayerToTheRight()
+    {
+        return transform.position.x <  player.transform.position.x;
+    }
+
+    private void RunToPosition(Vector2 targetPosition)
+    {
+        transform.position = Vector2.MoveTowards(transform.position, targetPosition, chaseSpeed * Time.deltaTime);
+    }
 }
