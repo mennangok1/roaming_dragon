@@ -3,16 +3,24 @@ using UnityEngine.SceneManagement;
 
 public class UIManager : MonoBehaviour
 {
-    [SerializeField] private GameObject gameOverScreen;
 
+    [Header( "Audio")]
     [SerializeField] private AudioClip gameOverSound;
 
 
+    [Header("UI Elements")]
+    [SerializeField] private GameObject gameOverScreen;
     [SerializeField] private GameObject pauseScreen;
+    [SerializeField] private GameObject healthBar;
+    [SerializeField] private GameObject globalHealthBar;
+    [SerializeField] private GameObject mainMenuScreen;
 
     private void Awake() {
         gameOverScreen.SetActive(false);
         pauseScreen.SetActive(false);
+        healthBar.SetActive(false);
+        globalHealthBar.SetActive(false);
+        mainMenuScreen.SetActive(true);
     }
     
     private void Update() {
@@ -34,14 +42,16 @@ public class UIManager : MonoBehaviour
         SoundManager.instance.PlaySound(gameOverSound);
     }
 
-
     public void Restart()
     {
+        Time.timeScale = 1f;
         SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
     }
     public void MainMenu()
     {
-        SceneManager.LoadScene(0);
+        mainMenuScreen.SetActive(true);
+        Time.timeScale = 1f;
+        Restart();
     }
     public void Quit()
     {
@@ -60,6 +70,15 @@ public class UIManager : MonoBehaviour
             Time.timeScale = 0;
         else
             Time.timeScale = 1;
+    }
+
+    public void StartGame()
+    {
+        pauseScreen.SetActive(false);
+        gameOverScreen.SetActive(false);
+        healthBar.SetActive(true);
+        globalHealthBar.SetActive(true);
+        mainMenuScreen.SetActive(false);
     }
     
 
