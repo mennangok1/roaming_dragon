@@ -3,10 +3,18 @@ using System.Collections;
 
 public class PlayerAttack : MonoBehaviour
 {
-    [SerializeField] private float attackCooldown;
 
+    [Header ("Attack")]
     [SerializeField] private Transform firePoint;
     [SerializeField] private GameObject[] fireBalls;
+    [SerializeField] private float chargerCapacity;
+    [SerializeField] private float fillChargerCooldown;
+    [SerializeField] private float attackCooldown;
+    [SerializeField] private float currentFireballsAvailable = 3f;
+
+    private Coroutine chargerRoutine;
+
+
 
     [Header("Audio")]
     [SerializeField] private AudioClip fireballSound;
@@ -25,6 +33,7 @@ public class PlayerAttack : MonoBehaviour
     [SerializeField] private float groundRecoilDamping = 80f;
     [SerializeField] private float airRecoilDamping = 25f;
     private Coroutine recoilRoutine;
+    
 
     public enum PlayerActionState {None, Attacking}
     public PlayerActionState currentActionState {get; private set;} = PlayerActionState.None;
@@ -33,6 +42,7 @@ public class PlayerAttack : MonoBehaviour
         animator = GetComponent<Animator>();
         player = GetComponent<Player>();
         body = GetComponent<Rigidbody2D>();
+        currentFireballsAvailable = chargerCapacity;
     }
 
     private void Update() {
@@ -40,17 +50,27 @@ public class PlayerAttack : MonoBehaviour
         {
             Attack();
         }
-
+        if (!IsChargerFull() && chargerRoutine == null)
+        {
+            chargerRoutine = StartCoroutine(FillChargerRoutine());
+        }
         cooldownTimer += Time.deltaTime;
     }
 
     private void Attack()
     {
+        if (IsChargerEmpty())
+        {
+          HandleCannotAttack();
+          return;  
+        } 
+
         SoundManager.instance.PlaySound(fireballSound);
         animator.SetTrigger("attack");
         cooldownTimer = 0;   
 
         //pool fireballs
+        currentFireballsAvailable = Mathf.Clamp(currentFireballsAvailable - 1, 0, chargerCapacity);
         int availableFireballIndex = FindFireball();
         fireBalls[ availableFireballIndex ].transform.position = firePoint.position;
         fireBalls[ availableFireballIndex ].GetComponent<Projectile>().SetDirection(Mathf.Sign(transform.localScale.x));
@@ -64,7 +84,27 @@ public class PlayerAttack : MonoBehaviour
 
     }
 
+    private bool IsChargerEmpty()
+    {
+        return currentFireballsAvailable == 0;
+    }
 
+    public bool IsChargerFull()
+    {
+        return currentFireballsAvailable == chargerCapacity;
+    }
+    private void HandleCannotAttack()
+    {
+        
+    }
+
+    IEnumerator FillChargerRoutine()
+    {
+        if (IsChargerFull()) yield break;
+        yield return new WaitForSeconds(fillChargerCooldown);
+        currentFireballsAvailable = Mathf.Clamp(currentFireballsAvailable + 1, 0, chargerCapacity);
+        chargerRoutine = null;
+    }
     IEnumerator RecoilRoutine()
     {
         player.ChangeMovementState(Player.PlayerMovementState.Stunned);
@@ -110,5 +150,15 @@ public class PlayerAttack : MonoBehaviour
     public bool CanAttack()
     {
         return player.currentLocationState != Player.PlayerLocationState.OnWall;
+    }
+
+    public float GetChargerCapacity()
+    {
+        return chargerCapacity;
+    }
+
+    public float GetCurrentFireballsAvailable()
+    {
+        return currentFireballsAvailable;
     }
 }
