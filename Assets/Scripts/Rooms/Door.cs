@@ -20,7 +20,7 @@ public class Door : MonoBehaviour
         {
             return;
         }
-        if (playerScript.GetCurrentRoom() != previousRoom || playerScript.GetCurrentRoom() != nextRoom)
+        if (playerScript.GetCurrentRoom() != previousRoom && playerScript.GetCurrentRoom() != nextRoom)
         {
             return;
         }
