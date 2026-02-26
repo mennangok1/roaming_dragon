@@ -116,7 +116,7 @@ public class Player : MonoBehaviour
     {
         animator.SetBool("isRunning", currentMovementState == PlayerMovementState.Running);
         animator.SetBool("isGrounded", currentLocationState == PlayerLocationState.OnGround);
-        animator.SetBool("isJumping", currentLocationState == PlayerLocationState.OnAir);
+        animator.SetBool("isJumping", currentLocationState == PlayerLocationState.OnAir && attackScript.GetCurrentActionState() != PlayerAttack.PlayerActionState.Striking);
         animator.SetBool("isOnWall", currentLocationState == PlayerLocationState.OnWall);
     }
     private void DetermineMovementState()

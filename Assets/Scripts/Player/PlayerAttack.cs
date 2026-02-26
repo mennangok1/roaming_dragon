@@ -14,10 +14,15 @@ public class PlayerAttack : MonoBehaviour
 
     private Coroutine chargerRoutine;
 
-
+    [Header("Strike")]
+    [SerializeField] private float flyForce;
+    [SerializeField] private float riseDuration;
+    private Vector3 velocity = Vector3.zero;
 
     [Header("Audio")]
     [SerializeField] private AudioClip fireballSound;
+    [SerializeField] private AudioClip strikeStartSound;
+
 
     private Rigidbody2D body;
 
@@ -35,14 +40,16 @@ public class PlayerAttack : MonoBehaviour
     private Coroutine recoilRoutine;
     
 
-    public enum PlayerActionState {None, Attacking}
+    public enum PlayerActionState {None, Attacking, Striking}
     public PlayerActionState currentActionState {get; private set;} = PlayerActionState.None;
 
+    private PlayerStrike playerStrike;
     private void Awake() {
         animator = GetComponent<Animator>();
         player = GetComponent<Player>();
         body = GetComponent<Rigidbody2D>();
         currentFireballsAvailable = chargerCapacity;
+        playerStrike = transform.Find("StrikeHitbox").GetComponent<PlayerStrike>();
     }
 
     private void Update() {
@@ -161,4 +168,41 @@ public class PlayerAttack : MonoBehaviour
     {
         return currentFireballsAvailable;
     }
+
+
+    public void SetCurrentActionState(PlayerActionState actionState)
+    {
+        currentActionState = actionState;
+    }
+
+    public PlayerActionState GetCurrentActionState()
+    {
+        return currentActionState;
+    }
+
+
+    #region Strike
+    
+    public void Rise()
+    {
+        // will be called by the animator when the dragon starts to fly
+        Vector3 target = new Vector3(transform.position.x, transform.position.y + flyForce, transform.position.z);
+        SoundManager.instance.PlaySound(strikeStartSound);
+        transform.position = Vector3.SmoothDamp(transform.position,
+                                                 target,
+                                                 ref velocity,
+                                                 riseDuration);
+
+        playerStrike.canDamage = true;
+        //transform.position = Vector3.SmoothDamp(transform.position, new Vector3(currentPosX, transform.position.y, transform.position.z), ref velocity, speed);
+    }
+    public void Land()
+    {
+        playerStrike.canDamage = false;
+    }
+    public void EndStrike()
+    {
+        SetCurrentActionState(PlayerActionState.None);
+    }
+    #endregion
 }

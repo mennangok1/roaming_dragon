@@ -36,7 +36,7 @@ public class FireTrap : MonoBehaviour
     }
 
     private void OnTriggerEnter2D(Collider2D other) {
-        if (other.tag == "Player")
+        if (other.gameObject.layer == LayerMask.NameToLayer("PlayerHitbox"))
         {
             
             // if the trap is not triggered, then trigger and activate it

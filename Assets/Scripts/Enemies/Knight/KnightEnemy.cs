@@ -109,17 +109,6 @@ public class KnightEnemy : MonoBehaviour {
         }
         wasCollidingWithEnvironment = isCollidingWithEnvironment;
     }
-    private void OnCollisionEnter2D(Collision2D collision)
-    {
-        if (collision.gameObject.CompareTag("Player"))
-        {
-            Health playerHealth = attackScript.player.GetComponentInParent<Health>();
-            if (playerHealth != null)
-            {
-                playerHealth.TakeDamage(damage);
-            }
-        }
-    }
 
     IEnumerator Patrol()
     {
